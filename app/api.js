@@ -4,9 +4,11 @@
 
 const router = require('koa-router')()
 const tools = require('./tools')
-const home = require('./home/homeController')
+const homeController = require('./home/homeController')
+const userController = require('./user/userController')
 
 router.use(tools.state)
-home(router)
+homeController(router)
+userController(router)
 
 module.exports = router.routes()
