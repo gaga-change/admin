@@ -55,7 +55,6 @@
         //监听搜索
         form.on('submit(LAY-app-contlist-search)', function (data) {
             var field = data.field;
-
             //执行重载
             table.reload('LAY-app-content-list', {
                 where: field
@@ -71,7 +70,6 @@
                     if (checkData.length === 0) {
                         return layer.msg('请选择数据');
                     }
-
                     layer.confirm('确定删除吗？', function (index) {
                         var ids = []
                         checkData.forEach(function (item) {
@@ -166,6 +164,9 @@
                 ]
             ],
             page: !0,
+            request: {
+                limitName: 'pageSize'
+            },
             limit: 10,
             limits: [10, 15, 20, 25, 30]
         })
