@@ -7,6 +7,7 @@ const site = require('../config/site')
 const homeController = require('./home/homeController')
 const userController = require('./user/userController')
 const toolsController = require('./tools/toolsController')
+const costController = require('./cost/costController')
 
 // 绑定 用户&site配置项 到state中
 router.use(async (ctx, next) => {
@@ -19,6 +20,6 @@ router.use(async (ctx, next) => {
 homeController(router)
 userController(router)
 toolsController(router)
-
+costController(router)
 
 module.exports = router.routes()
