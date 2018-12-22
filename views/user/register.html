@@ -20,7 +20,7 @@
                 <h2>{{theme}}</h2>
                 <!-- <p>layui 官方出品的单页面后台管理模板系统</p> -->
             </div>
-            <div class="layadmin-user-login-box layadmin-user-login-body layui-form">
+            <form class="layadmin-user-login-box layadmin-user-login-body layui-form">
                 <div class="layui-form-item">
                     <label class="layadmin-user-login-icon layui-icon layui-icon-username" for="LAY-user-login-nickname"></label>
                     <input type="text" name="username" id="LAY-user-login-nickname" lay-verify="nickname" placeholder="用户名"
@@ -73,7 +73,7 @@
                     <a href="login.html" class="layadmin-user-jump-change layadmin-link layui-hide-xs">用已有帐号登入</a>
                     <a href="login.html" class="layadmin-user-jump-change layadmin-link layui-hide-sm layui-show-xs-inline-block">登入</a>
                 </div>
-            </div>
+            </form>
         </div>
 
         <div class="layui-trans layadmin-user-login-footer">
@@ -102,11 +102,7 @@
                 , router = layui.router();
 
             form.render();
-            // 刷新验证码
-            $('.captcha').click(function (e) {
-                var target = $(e.target)
-                target.attr('src', '/tools/captcha?v=' + Date.now())
-            })
+            
             //提交
             form.on('submit(LAY-user-reg-submit)', function (obj) {
                 var field = obj.field;

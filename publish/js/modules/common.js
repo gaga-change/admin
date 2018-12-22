@@ -1,15 +1,20 @@
-layui.define(function (e) {
-    var i = (layui.$, layui.layer, layui.laytpl, layui.setter, layui.view, layui.admin);
-    i.events.logout = function () {
-        i.req({
-            url: layui.setter.base + "json/user/logout.js",
+layui.define(function (exports) {
+    var admin = (layui.$, layui.layer, layui.laytpl, layui.setter, layui.view, layui.admin);
+    admin.events.logout = function () {
+        admin.req({
+            url: "/api/users/logout",
             type: "get",
-            data: {},
-            done: function (e) {
-                i.exit(function () {
-                    location.href = "user/login.html"
+            dataType: 'text',
+            success: function (e) {
+                admin.exit(function () {
+                    location.href = "/user/login.html"
                 })
             }
         })
-    }, e("common", {})
+    }, exports("common", {})
+    // 刷新验证码
+    layui.$('.captcha').click(function (e) {
+        var target = layui.$(e.target)
+        target.attr('src', '/tools/captcha?v=' + Date.now())
+    })
 });

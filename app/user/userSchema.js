@@ -19,7 +19,7 @@ const UserSchema = new Schema({
         type: String
     },
     // 别名
-    name: {
+    username: {
         default: '',
         type: String,
         trim: true
@@ -40,6 +40,10 @@ const UserSchema = new Schema({
     },
     // 类别
     type: {
+        type: String
+    },
+    // 类别名称(显示用)
+    typeName: {
         type: String
     }
 }, {timestamps: true})
@@ -95,10 +99,12 @@ UserSchema.methods = {
     /** 设置当前用户为超级管理员 */
     setSuper() {
         this.type = TYPE.SUPER
+        this.typeName = "超级管理员"
     },
     /** 设置当前用户为管理员 */
     setAdmin() {
         this.type = TYPE.ADMIN
+        this.typeName = "管理员"
     }
 }
 
