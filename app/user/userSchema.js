@@ -3,6 +3,11 @@ const mongoose = require('mongoose')
 const crypto = require('crypto')
 const {Schema} = mongoose
 
+const TYPE = {
+    SUPER: 'super',
+    ADMIN: 'admin'
+}
+
 /**
  * User Schema
  */
@@ -23,10 +28,18 @@ const UserSchema = new Schema({
         default: '',
         type: String
     },
-    // 用户名
-    username: {
+    // 邮箱
+    email: {
         default: '',
-        trim: true,
+        type: String
+    },
+    // 手机号码
+    phone: {
+        default: '',
+        type: String
+    },
+    // 类别
+    type: {
         type: String
     }
 }, {timestamps: true})
@@ -78,10 +91,20 @@ UserSchema.methods = {
      */
     makeSalt () {
         return String(Math.round(new Date().valueOf() * Math.random()))
+    },
+    /** 设置当前用户为超级管理员 */
+    setSuper() {
+        this.type = TYPE.SUPER
+    },
+    /** 设置当前用户为管理员 */
+    setAdmin() {
+        this.type = TYPE.ADMIN
     }
 }
 
 /** 静态方法 */
-UserSchema.statics = { }
+UserSchema.statics = {
+    
+}
 
-module.exports = mongoose.model('User', UserSchema)
+module.exports = mongoose.model('User', UserSchema, 'user_ds')
