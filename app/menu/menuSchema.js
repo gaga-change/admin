@@ -40,6 +40,10 @@ const MenuSchema = new Schema({
         default: 0,
         type: Number
     },
+    // 图标
+    icon: {
+        type: String
+    },
     // 访问次数
     num: {
         default: 0,
@@ -63,6 +67,7 @@ MenuSchema.statics = {
             .sort({
                 createdAt: -1
             })
+            .populate('parent')
             .limit(pageSize)
             .skip((page - 1) * pageSize),
             this.countDocuments(criteria)

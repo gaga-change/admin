@@ -26,7 +26,7 @@
             <script type="text/html" id="buttonTpl">
                 {% raw %}
           {{#  if(d.show){ }}
-            <button class="layui-btn layui-btn-xs">已启用 </button>
+            <button class="layui-btn layui-btn-xs">已显示 </button>
           {{#  } else if (d.type == 'page') { }}
             <button class="layui-btn layui-btn-primary layui-btn-xs">未启用</button>
           {{#  } }}
@@ -34,7 +34,8 @@
         </script>
             <script type="text/html" id="table-content-list">
                 <a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="edit"><i class="layui-icon layui-icon-edit"></i>编辑</a>
-          <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del"><i class="layui-icon layui-icon-delete"></i>删除</a>
+                <a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="addSon"><i class="layui-icon layui-icon-edit"></i>添加子级</a>
+                <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del"><i class="layui-icon layui-icon-delete"></i>删除</a>
         </script>
         </div>
     </div>
@@ -113,6 +114,7 @@
             parseData: function (res) { //res 即为原始返回的数据
                 res.data.forEach(function (item) {
                     item.createdAt = layui.util.timeAgo(item.createdAt, true)
+                    item.parentSign = item.parent && item.parent.sign
                 })
                 return {
                     "code": 0, //解析接口状态
@@ -135,8 +137,8 @@
                         sort: !0
                     },
                     {
-                        field: "parent.name",
-                        title: '父级菜单',
+                        field: "parentSign",
+                        title: '父级标识',
                         sort: !0
                     },
                     {
@@ -174,7 +176,7 @@
                     },
                     {
                         title: "操作",
-                        minWidth: 150,
+                        minWidth: 250,
                         align: "center",
                         fixed: "right",
                         toolbar: "#table-content-list"
@@ -190,41 +192,61 @@
         })
         table.on("tool(LAY-app-content-list)",
             function (obj) {
-                var data = obj.data;
-                "del" === obj.event ? layer.confirm("确定删除此菜单？", function (index) {
-                    admin.req({
-                        type: 'delete',
-                        url: '/api/menus/' + data._id
+                var data = obj.data
+                if ("del" === obj.event) {
+                    layer.confirm("确定删除此菜单？", function (index) {
+                        admin.req({
+                            type: 'delete',
+                            url: '/api/menus/' + data._id
+                        })
+                        obj.del()
+                        layer.close(index)
                     })
-                    obj.del()
-                    layer.close(index)
-                }) : "edit" === obj.event && layer.open({
-                    type: 2,
-                    title: "编辑菜单",
-                    content: "/menu/menuForm.html?id=" + data._id,
-                    maxmin: !0,
-                    area: ["550px", "550px"],
-                    btn: ["确定", "取消"],
-                    yes: function (index, layero) {
-                        var iframe = window["layui-layer-iframe" + index],
-                            deitEle = layero.find("iframe").contents().find(
-                                "#layuiadmin-app-form-edit");
-                        iframe.layui.form.on("submit(layuiadmin-app-form-edit)",
-                            function (sonObj) {
-                                var field = sonObj.field;
-                                admin.req({
-                                    type: 'put',
-                                    url: '/api/menus/' + data._id,
-                                    data: field,
-                                    success: function (res) {
-                                        obj.update(layui.$.extend({}, field));
-                                        form.render();
-                                        layer.close(index)
-                                    }
-                                })
-                            }), deitEle.trigger("click")
-                    }
-                })
+                } else if ("edit" === obj.event) {
+                    layer.open({
+                        type: 2,
+                        title: "编辑菜单",
+                        content: "/menu/menuForm.html?id=" + data._id,
+                        maxmin: !0,
+                        area: ["550px", "550px"],
+                        btn: ["确定", "取消"],
+                        yes: function (index, layero) {
+                            var iframe = window["layui-layer-iframe" + index],
+                                deitEle = layero.find("iframe").contents().find(
+                                    "#layuiadmin-app-form-edit");
+                            iframe.layui.form.on("submit(layuiadmin-app-form-edit)",
+                                function (sonObj) {
+                                    var field = sonObj.field;
+                                    admin.req({
+                                        type: 'put',
+                                        url: '/api/menus/' + data._id,
+                                        data: field,
+                                        success: function (res) {
+                                            obj.update(layui.$.extend({}, field));
+                                            form.render();
+                                            layer.close(index)
+                                        }
+                                    })
+                                }), deitEle.trigger("click")
+                        }
+                    })
+                } else if ("addSon" === obj.event) {
+                    layer.open({
+                        type: 2,
+                        title: '添加菜单',
+                        content: '/menu/menuForm.html?parentId=' + data._id,
+                        maxmin: true,
+                        area: ['550px', '550px'],
+                        btn: ['确定', '取消'],
+                        yes: function (index, layero) {
+                            //点击确认触发 iframe 内容中的按钮提交
+                            var submit = layero.find('iframe').contents().find(
+                                "#layuiadmin-app-form-submit");
+                            submit.click();
+                        }
+                    });
+                }
+
             })
         table.render({
             elem: "#LAY-app-content-tags",

@@ -11,12 +11,22 @@ module.exports = router => {
     })
     // 表单 - 页面
     router.get('/menu/menuForm.html', async ctx => {
-        let id = ctx.query.id
-        if (id) {
+        let {
+            id,
+            parentId
+        } = ctx.query
+        if (id) { // 编辑
             ctx.state.menu = await menuService.list(ctx, {
                 _id: id
             })
-        } else {
+        } else if (parentId) { // 添加子菜单
+            ctx.state.menu = {
+                parent:  await menuService.list(ctx, {
+                    _id: parentId
+                })
+            }
+            console.log(ctx.state.menu)
+        } else { // 添加一级
             ctx.state.menu = {}
         }
         await ctx.render('menu/menuForm', ctx.state)

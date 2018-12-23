@@ -2,30 +2,37 @@
 {% block content %}
 <div class="layui-form" lay-filter="layuiadmin-app-form-list" id="layuiadmin-app-form-list" style="padding: 20px 30px 0 0;">
     <div class="layui-form-item">
-        <label class="layui-form-label">标识</label>
+        <label class="layui-form-label required">标识</label>
         <div class="layui-input-inline">
             <input type="text" name="sign" lay-verify="required" placeholder="请输入名称" autocomplete="off" class="layui-input"
                 value="{{menu.sign}}">
         </div>
     </div>
     <div class="layui-form-item">
-        <label class="layui-form-label">名称</label>
+        <label class="layui-form-label required">名称</label>
         <div class="layui-input-inline">
             <input type="text" name="name" lay-verify="required" placeholder="请输入名称" autocomplete="off" class="layui-input"
                 value="{{menu.name}}">
         </div>
     </div>
     <div class="layui-form-item">
-        <label class="layui-form-label">父级菜单</label>
+        <label class="layui-form-label">图标</label>
         <div class="layui-input-inline">
-            <input type="text" lay-verify="" placeholder="请输入名称" autocomplete="off" class="layui-input" value=""
-                readonly>
+            <input type="text" name="icon" lay-verify="" placeholder="请输入名称" autocomplete="off" class="layui-input"
+                value="{{menu.icon}}">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">父级标识</label>
+        <div class="layui-input-inline">
+            <input type="text" lay-verify="" placeholder="请输入" name="parentSign" autocomplete="off" class="layui-input" value="{{menu.parent && menu.parent.sign }}"
+                >
         </div>
     </div>
     <div class="layui-form-item">
         <label class="layui-form-label">链接地址</label>
         <div class="layui-input-inline">
-            <input type="text" name="url" lay-verify="required" placeholder="请输入名称" autocomplete="off" class="layui-input"
+            <input type="text" name="url" lay-verify="" placeholder="请输入名称" autocomplete="off" class="layui-input"
                 value="{{menu.url}}">
         </div>
     </div>
