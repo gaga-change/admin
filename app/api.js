@@ -9,6 +9,7 @@ const userController = require('./user/userController')
 const toolsController = require('./tools/toolsController')
 const costController = require('./cost/costController')
 const referrerController = require('./referrer/referrerController')
+const regPointController = require('./regPoint/regPointController')
 
 // 绑定 用户&site配置项 到state中
 router.use(async (ctx, next) => {
@@ -23,5 +24,6 @@ userController(router)
 toolsController(router)
 costController(router)
 referrerController(router)
+regPointController(router)
 
 module.exports = router.routes()
