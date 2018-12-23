@@ -391,7 +391,6 @@ layui.define("view", function (e) {
         F[i] && F[i].call(this, e)
     }), o.on("mouseenter", "*[lay-tips]", function () {
         var e = a(this);
-        console.log(e)
         if (!e.parent().hasClass("layui-nav-item") || u.hasClass(C)) {
             var i = e.attr("lay-tips"),
                 t = e.attr("lay-offset"),

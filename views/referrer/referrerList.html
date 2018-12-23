@@ -77,7 +77,7 @@
                         })
                         admin.req({
                             type: 'DELETE',
-                            url: '/api/costs?ids=' + ids.join(','),
+                            url: '/api/referrers?ids=' + ids.join(','),
                             success: function (res) {
                                 table.reload('LAY-app-content-list');
                                 layer.msg('已删除');
@@ -88,8 +88,8 @@
                 add: function () {
                     layer.open({
                         type: 2,
-                        title: '添加费用项',
-                        content: '/cost/costForm.html',
+                        title: '添加推荐人',
+                        content: '/referrer/referrerForm.html',
                         maxmin: true,
                         area: ['550px', '550px'],
                         btn: ['确定', '取消'],
@@ -110,7 +110,7 @@
 
         table.render({
             elem: "#LAY-app-content-list",
-            url: "/api/costs",
+            url: "/api/referrers",
             parseData: function (res) { //res 即为原始返回的数据
                 return {
                     "code": 0, //解析接口状态
@@ -130,11 +130,6 @@
                     {
                         field: "name",
                         title: "名称",
-                        sort: !0
-                    },
-                    {
-                        field: "price",
-                        title: "价格",
                         sort: !0
                     },
                     {
@@ -173,17 +168,17 @@
         table.on("tool(LAY-app-content-list)",
             function (obj) {
                 var data = obj.data;
-                "del" === obj.event ? layer.confirm("确定删除此费用项？", function (index) {
+                "del" === obj.event ? layer.confirm("确定删除此推荐人？", function (index) {
                     admin.req({
                         type: 'delete',
-                        url: '/api/costs/' + data._id
+                        url: '/api/referrers/' + data._id
                     })
                     obj.del()
                     layer.close(index)
                 }) : "edit" === obj.event && layer.open({
                     type: 2,
-                    title: "编辑费用项",
-                    content: "/cost/costForm.html?id=" + data._id,
+                    title: "编辑推荐人",
+                    content: "/referrer/referrerForm.html?id=" + data._id,
                     maxmin: !0,
                     area: ["550px", "550px"],
                     btn: ["确定", "取消"],
@@ -196,7 +191,7 @@
                                 var field = sonObj.field;
                                 admin.req({
                                     type: 'put',
-                                    url: '/api/costs/' + data._id,
+                                    url: '/api/referrers/' + data._id,
                                     data: field,
                                     success: function (res) {
                                         obj.update(layui.$.extend({}, field));

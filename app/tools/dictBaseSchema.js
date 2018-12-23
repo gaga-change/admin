@@ -38,7 +38,7 @@ DictBaseSchema.statics = {
             this.countDocuments(criteria)
         ]).then(res => {
             return {
-                costs: res[0],
+                data: res[0],
                 page: {
                     count: res[1],
                     page,

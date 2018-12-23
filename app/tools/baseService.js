@@ -31,7 +31,6 @@ module.exports = {
             this.DB.schema.eachPath(function(path) {
                 if (object[path]) criteria[path] = object[path]
             })
-            console.log(criteria, page)
             return await this.DB.findAll({
                 page: page.page,
                 pageSize: page.pageSize,
