@@ -5,7 +5,7 @@
 const tools = require('../tools')
 
 module.exports = function (router) {
-    router.get(['/', '/index.html'], tools.checkAuth, async (ctx, next) => {
+    router.get('/', tools.checkAuth, async (ctx, next) => {
         await ctx.render('index', ctx.state)
     })
 }
