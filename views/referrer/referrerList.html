@@ -112,6 +112,9 @@
             elem: "#LAY-app-content-list",
             url: "/api/referrers",
             parseData: function (res) { //res 即为原始返回的数据
+                res.data.forEach(function (item) {
+                    item.createdAt = layui.util.timeAgo(item.createdAt, true)
+                })
                 return {
                     "code": 0, //解析接口状态
                     "msg": '', //解析提示文本
