@@ -1,7 +1,7 @@
 const only = require('only')
 const code = require('../code')
 const tools = require('../tools')
-const Page = require('../Page')
+const Page = require('../tools/Page')
 const costService = require('./costService')
 
 module.exports = router => {

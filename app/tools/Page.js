@@ -1,3 +1,6 @@
+/**
+ * 分页器
+ */
 
 function Page(obj) {
     this.page = obj.page || 1
