@@ -12,6 +12,7 @@ const referrerController = require('./referrer/referrerController')
 const regPointController = require('./regPoint/regPointController')
 const classTypeController = require('./classType/classTypeController')
 const campusController = require('./campus/campusController')
+const payTypeController = require('./payType/payTypeController')
 
 // 绑定 用户&site配置项 到state中
 router.use(async (ctx, next) => {
@@ -30,5 +31,6 @@ referrerController(router)
 regPointController(router)
 classTypeController(router)
 campusController(router)
+payTypeController(router)
 
 module.exports = router.routes()
