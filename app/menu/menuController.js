@@ -4,13 +4,23 @@ const tools = require('../tools')
 const Page = require('../tools/Page')
 const menuService = require('./menuService')
 const baseController = require('../tools/baseController')
-module.exports = router => {
+module.exports = (router, auto) => {
+    let opt = {
+        sign: 'menu-list',
+        type: 'page',
+        url: '/menu/menuList.html'
+    }
     // 列表 - 页面
-    router.get('/menu/menuList.html', async ctx => {
+    router.get(opt.url, auto(opt), async ctx => {
         await ctx.render('menu/menuList', ctx.state)
     })
+    opt = {
+        sign: 'menu-form',
+        type: 'page',
+        url: '/menu/menuForm.html'
+    }
     // 表单 - 页面
-    router.get('/menu/menuForm.html', async ctx => {
+    router.get(opt.url, auto(opt), async ctx => {
         let {
             id,
             parentId
@@ -21,7 +31,7 @@ module.exports = router => {
             })
         } else if (parentId) { // 添加子菜单
             ctx.state.menu = {
-                parent:  await menuService.list(ctx, {
+                parent: await menuService.list(ctx, {
                     _id: parentId
                 })
             }
