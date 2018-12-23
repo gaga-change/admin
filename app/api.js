@@ -11,6 +11,7 @@ const costController = require('./cost/costController')
 const referrerController = require('./referrer/referrerController')
 const regPointController = require('./regPoint/regPointController')
 const classTypeController = require('./classType/classTypeController')
+const campusController = require('./campus/campusController')
 
 // 绑定 用户&site配置项 到state中
 router.use(async (ctx, next) => {
@@ -20,6 +21,7 @@ router.use(async (ctx, next) => {
     }
     return next()
 })
+
 homeController(router)
 userController(router)
 toolsController(router)
@@ -27,5 +29,6 @@ costController(router)
 referrerController(router)
 regPointController(router)
 classTypeController(router)
+campusController(router)
 
 module.exports = router.routes()
