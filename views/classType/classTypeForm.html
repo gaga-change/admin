@@ -1,0 +1,72 @@
+{% extends '../template/layout2.html' %}
+{% block content %}
+<div class="layui-form" lay-filter="layuiadmin-app-form-list" id="layuiadmin-app-form-list" style="padding: 20px 30px 0 0;">
+    <div class="layui-form-item">
+        <label class="layui-form-label">名称</label>
+        <div class="layui-input-inline">
+            <input type="text" name="name" lay-verify="required" placeholder="请输入名称" autocomplete="off" class="layui-input"
+                value="{{classType.name}}">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">价格</label>
+        <div class="layui-input-inline">
+            <input type="text" name="price" lay-verify="number" placeholder="请输入价格" autocomplete="off" class="layui-input"
+                value="{{classType.price}}">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">备注</label>
+        <div class="layui-input-inline">
+            <textarea name="remark" lay-verify="" style="width: 400px; height: 150px;" autocomplete="off" class="layui-textarea">{{classType.remark}}</textarea>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">是否启用</label>
+        <div class="layui-input-inline">
+            <input type="checkbox" lay-verify="required" lay-filter="status" name="status" lay-skin="switch" lay-text="启用|不启用"
+                value="true" {% if classType.status %} checked="checked" {% endif %}>
+        </div>
+    </div>
+    <div class="layui-form-item layui-hide">
+        <input type="button" lay-submit lay-filter="layuiadmin-app-form-submit" id="layuiadmin-app-form-submit" value="确认添加">
+        <input type="button" lay-submit lay-filter="layuiadmin-app-form-edit" id="layuiadmin-app-form-edit" value="确认编辑">
+    </div>
+</div>
+{% endblock %}
+{% block script %}
+<script>
+    layui.config({
+        base: '/' //静态资源所在路径
+    }).extend({
+        index: 'js/lib/index' //主入口模块
+    }).use(['index', 'form'], function () {
+        var $ = layui.$,
+            admin = layui.admin
+        form = layui.form;
+        form.on('submit()', function (data) {
+            $('input[type=checkbox]').each(function(index, ele) {
+                ele = $(ele)
+                var key = ele.attr('name')
+                data.field[key] = data.field[key] || false
+            })
+            return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
+        });
+        //监听提交
+        form.on('submit(layuiadmin-app-form-submit)', function (data) {
+            var field = data.field; //获取提交的字段
+            var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引  
+            //提交 Ajax 成功后，关闭当前弹层并重载表格
+            admin.req({
+                type: 'post',
+                url: '/api/classTypes',
+                data: field,
+                success: function (res) {
+                    parent.layui.table.reload('LAY-app-content-list'); //重载表格
+                    parent.layer.close(index); //再执行关闭 
+                }
+            })
+        });
+    })
+</script>
+{% endblock %}
