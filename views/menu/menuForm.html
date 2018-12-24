@@ -1,6 +1,6 @@
 {% extends '../template/layout2.html' %}
 {% block content %}
-<div class="layui-form" lay-filter="layuiadmin-app-form-list" id="layuiadmin-app-form-list" style="padding: 20px 30px 0 0;">
+<form class="layui-form" lay-filter="layuiadmin-app-form-list" id="layuiadmin-app-form-list" style="padding: 20px 30px 0 0;">
     <div class="layui-form-item">
         <label class="layui-form-label required">标识</label>
         <div class="layui-input-inline">
@@ -69,7 +69,7 @@
         <input type="button" lay-submit lay-filter="layuiadmin-app-form-submit" id="layuiadmin-app-form-submit" value="确认添加">
         <input type="button" lay-submit lay-filter="layuiadmin-app-form-edit" id="layuiadmin-app-form-edit" value="确认编辑">
     </div>
-</div>
+</form>
 {% endblock %}
 {% block script %}
 <script>
