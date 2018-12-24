@@ -14,7 +14,7 @@ module.exports = (opt) => {
         }, {
             upsert: true
         })
-        console.log(Date.now() - d)
+        console.log('menu-save-time:',  Date.now() - d + 'ms')
         await next()        
     }
 }

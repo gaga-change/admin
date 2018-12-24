@@ -13,7 +13,7 @@ module.exports = {
     /** 登录 */
     async login (ctx, user) {
         const findUser = await User.findOne({ username: user.username })
-        ctx.assert(findUser, code.Unauthorized, '邮箱不存在')
+        ctx.assert(findUser, code.Unauthorized, '用户不存在')
         ctx.assert(
             findUser.authenticate(user.password),
             code.Unauthorized, '密码错误'

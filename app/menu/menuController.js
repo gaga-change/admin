@@ -5,22 +5,12 @@ const Page = require('../tools/Page')
 const menuService = require('./menuService')
 const baseController = require('../tools/baseController')
 module.exports = (router, auto) => {
-    let opt = {
-        sign: 'menu-list',
-        type: 'page',
-        url: '/menu/menuList.html'
-    }
     // 列表 - 页面
-    router.get(opt.url, auto(opt), async ctx => {
+    router.get('/menu/menuList.html', async ctx => {
         await ctx.render('menu/menuList', ctx.state)
     })
-    opt = {
-        sign: 'menu-form',
-        type: 'page',
-        url: '/menu/menuForm.html'
-    }
     // 表单 - 页面
-    router.get(opt.url, auto(opt), async ctx => {
+    router.get('/menu/menuForm.html', async ctx => {
         let {
             id,
             parentId

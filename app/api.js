@@ -1,7 +1,7 @@
 /**
  * 路由
  */
-
+const path = require('path')
 const router = require('koa-router')()
 const site = require('../config/site')
 const auto = require('./auto')
@@ -27,17 +27,51 @@ router.use(async (ctx, next) => {
     return next()
 })
 
-homeController(router, auto)
-userController(router, auto)
-toolsController(router, auto)
-costController(router, auto)
-referrerController(router, auto)
-regPointController(router, auto)
-classTypeController(router, auto)
-campusController(router, auto)
-payTypeController(router, auto)
-responsibleController(router, auto)
-messageController(router, auto)
-menuController(router, auto)
+const myRouter = {
+    get(...args) {
+        this._(args, 'get')
+    },
+    post(...args) {
+        this._(args, 'post')
+    },
+    delete(...args) {
+        this._(args, 'delete')
+    },
+    put(...args) {
+        this._(args, 'put')
+    },
+    _(args, method, menuType) {
+        let opt = args.shift()
+        if (typeof opt == 'string') {
+            const extname = path.extname(opt)
+            opt = {
+                sign: opt,
+                url: opt
+            }
+            if (extname == '.html' || menuType) {
+                opt.type = 'page'
+            }
+        }
+        console.log(opt)
+        args.unshift(opt.url, auto(opt))
+        router[method](...args)
+    },
+    page(...args) {
+        this._(args, 'get', 'page')
+    }
+}
+
+homeController(myRouter)
+userController(myRouter)
+toolsController(myRouter)
+costController(myRouter)
+referrerController(myRouter)
+regPointController(myRouter)
+classTypeController(myRouter)
+campusController(myRouter)
+payTypeController(myRouter)
+responsibleController(myRouter)
+messageController(myRouter)
+menuController(myRouter)
 
 module.exports = router.routes()
