@@ -6,6 +6,7 @@ const {
 
 const ClassTypeSchema = new Schema({
     price: {
+        default: 0,
         type: Number
     }
 },{

@@ -6,6 +6,7 @@ const {
 
 const RegPointSchema = new Schema({
     price: {
+        default: 0,
         type: Number
     }
 },{

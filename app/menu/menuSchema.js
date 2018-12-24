@@ -7,10 +7,12 @@ const {
 const MenuSchema = new Schema({
     // 唯一标识
     sign: {
+        default: '',
         type: String,
     },
     // 名称
     name: {
+        default: '',
         type: String
     },
     // 父级菜单（若为接口可不添写）
@@ -20,14 +22,17 @@ const MenuSchema = new Schema({
     },
     // 链接地址（只用于展示。若为接口则无需）
     url: {
+        default: '',
         type: String,
     },
     // 是否展示在左侧菜单中
     show: {
+        default: false,
         type: Boolean
     },
     // 类型： 页面(page) | 接口(api)
     type: {
+        default: 'page',
         type: String,
     },
     // 备注
@@ -42,6 +47,7 @@ const MenuSchema = new Schema({
     },
     // 图标
     icon: {
+        default: '',
         type: String
     },
     // 访问次数

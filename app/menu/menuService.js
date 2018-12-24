@@ -10,7 +10,6 @@ module.exports = {
         const parentSign = object.parentSign
         const sign = object.sign
         let findMenu = await this.DB.findOne({sign})
-        console.log(findMenu)
         ctx.assert(!findMenu, code.BadRequest, '标识已存在')
         object = new this.DB(object)
         if (parentSign) {
@@ -22,6 +21,12 @@ module.exports = {
     },
     /** 修改 */
     async modify(ctx, object) {
+        const parentSign = object.parentSign
+        if (parentSign) {
+            let parent = await this.DB.findOne({sign: parentSign})
+            ctx.assert(parent, code.BadRequest, '父级标识不存在')
+            object.parent = parent
+        }
         return await this.DB.updateOne({
             _id: object._id
         }, object)
