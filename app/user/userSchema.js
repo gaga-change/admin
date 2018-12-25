@@ -47,6 +47,7 @@ const UserSchema = new Schema({
     typeName: {
         type: String
     },
+    // 备注
     remark: {
         default: '',
         type: String

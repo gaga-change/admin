@@ -76,8 +76,8 @@
                             ids.push(item._id)
                         })
                         admin.req({
-                            type: 'DELETE',
-                            url: '/api/users?ids=' + ids.join(','),
+                            type: 'delete',
+                            url: '/api/admins?ids=' + ids.join(','),
                             success: function (res) {
                                 table.reload('LAY-app-content-list');
                                 layer.msg('已删除');
@@ -88,8 +88,8 @@
                 add: function () {
                     layer.open({
                         type: 2,
-                        title: '添加操作员',
-                        content: '/user/userForm.html',
+                        title: '添加管理员',
+                        content: '/user/adminForm.html',
                         maxmin: true,
                         area: ['550px', '550px'],
                         btn: ['确定', '取消'],
@@ -110,7 +110,7 @@
 
         table.render({
             elem: "#LAY-app-content-list",
-            url: "/api/users",
+            url: "/api/admins",
             parseData: function (res) { //res 即为原始返回的数据
                 res.data.forEach(function (item) {
                     item.createdAt = layui.util.timeAgo(item.createdAt, true)
@@ -171,17 +171,17 @@
         table.on("tool(LAY-app-content-list)",
             function (obj) {
                 var data = obj.data;
-                "del" === obj.event ? layer.confirm("确定删除此操作员？", function (index) {
+                "del" === obj.event ? layer.confirm("确定删除此管理员？", function (index) {
                     admin.req({
                         type: 'delete',
-                        url: '/api/users/' + data._id
+                        url: '/api/admins/' + data._id
                     })
                     obj.del()
                     layer.close(index)
                 }) : "edit" === obj.event && layer.open({
                     type: 2,
-                    title: "编辑操作员",
-                    content: "/user/userForm.html?id=" + data._id,
+                    title: "编辑管理员",
+                    content: "/user/adminForm.html?id=" + data._id,
                     maxmin: !0,
                     area: ["550px", "550px"],
                     btn: ["确定", "取消"],
@@ -194,7 +194,7 @@
                                 var field = sonObj.field;
                                 admin.req({
                                     type: 'put',
-                                    url: '/api/users/' + data._id,
+                                    url: '/api/admins/' + data._id,
                                     data: field,
                                     success: function (res) {
                                         obj.update(layui.$.extend({}, field));

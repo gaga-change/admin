@@ -17,6 +17,7 @@ const payTypeController = require('./payType/payTypeController')
 const responsibleController = require('./responsible/responsibleController')
 const messageController = require('./message/messageController')
 const menuController = require('./menu/menuController')
+const adminController = require('./user/adminController')
 
 // 绑定 用户&site配置项 到state中
 router.use(async (ctx, next) => {
@@ -72,5 +73,6 @@ payTypeController(myRouter)
 responsibleController(myRouter)
 messageController(myRouter)
 menuController(myRouter)
+adminController(myRouter)
 
 module.exports = router.routes()

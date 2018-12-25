@@ -5,9 +5,18 @@
         <label class="layui-form-label">用户名</label>
         <div class="layui-input-inline">
             <input type="text" name="username" lay-verify="required" placeholder="请输入名称" autocomplete="off" class="layui-input"
-                value="{{userData.name}}">
+                value="{{userData.username}}">
         </div>
     </div>
+    {% if userData.username %}
+    <div class="layui-form-item">
+        <label class="layui-form-label">密码</label>
+        <div class="layui-input-inline">
+            <input type="password" name="password" lay-verify="required" placeholder="重置密码" autocomplete="off" class="layui-input"
+                value="">
+        </div>
+    </div>
+    {% endif%}
     <div class="layui-form-item">
         <label class="layui-form-label">备注</label>
         <div class="layui-input-inline">
@@ -38,7 +47,7 @@
             admin = layui.admin
         form = layui.form;
         form.on('submit()', function (data) {
-            $('input[type=checkbox]').each(function(index, ele) {
+            $('input[type=checkbox]').each(function (index, ele) {
                 ele = $(ele)
                 var key = ele.attr('name')
                 data.field[key] = data.field[key] || false
@@ -52,7 +61,7 @@
             //提交 Ajax 成功后，关闭当前弹层并重载表格
             admin.req({
                 type: 'post',
-                url: '/api/users',
+                url: '/api/admins',
                 data: field,
                 success: function (res) {
                     parent.layui.table.reload('LAY-app-content-list'); //重载表格

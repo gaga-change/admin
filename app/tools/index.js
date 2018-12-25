@@ -6,5 +6,13 @@ module.exports = {
         } else {
             return ctx.response.redirect('/user/login.html')
         }
+    },
+    /** 校验是否为超级管理员操作 */
+    async super(ctx, next) {
+        if (ctx.session.user && ctx.session.user.type == 'super') {
+            return next()
+        } else {
+            return ctx.response.redirect('/user/login.html')
+        }
     }
 }
