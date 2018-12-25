@@ -1,6 +1,6 @@
 layui.define(function (exports) {
     var admin = (layui.$, layui.layer, layui.laytpl, layui.setter, layui.view, layui.admin);
-    admin.events.logout = function () {
+    window.LOGOUT = admin.events.logout = function () {
         admin.req({
             url: "/api/users/logout",
             type: "get",
