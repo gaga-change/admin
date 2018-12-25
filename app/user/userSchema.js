@@ -1,7 +1,8 @@
-
 const mongoose = require('mongoose')
 const crypto = require('crypto')
-const {Schema} = mongoose
+const {
+    Schema
+} = mongoose
 
 const TYPE = {
     SUPER: 'super',
@@ -45,18 +46,29 @@ const UserSchema = new Schema({
     // 类别名称(显示用)
     typeName: {
         type: String
+    },
+    remark: {
+        default: '',
+        type: String
+    },
+    // 是否启用
+    status: {
+        default: false,
+        type: Boolean
     }
-}, {timestamps: true})
+}, {
+    timestamps: true
+})
 
 /** 虚拟属性 */
-UserSchema.virtual('password').set(function set (password) {
+UserSchema.virtual('password').set(function set(password) {
     this.textPassword = password
     this.salt = this.makeSalt()
     this.hashedPassword = this.encryptPassword(password)
 }).
-    get(function get () {
-        return this.textPassword
-    })
+get(function get() {
+    return this.textPassword
+})
 
 /** 实例方法 */
 UserSchema.methods = {
@@ -66,7 +78,7 @@ UserSchema.methods = {
      * @param {String} plainText 普通的文本（明文）
      * @returns {Boolean} 返回是否正确
      */
-    authenticate (plainText) {
+    authenticate(plainText) {
         return this.encryptPassword(plainText) === this.hashedPassword
     },
 
@@ -75,15 +87,15 @@ UserSchema.methods = {
      * @param {String} password 明文
      * @returns {String} 密文
      */
-    encryptPassword (password) {
+    encryptPassword(password) {
         if (!password) {
             return ''
         }
         try {
             return crypto.
-                createHmac('sha1', this.salt).
-                update(password).
-                digest('hex')
+            createHmac('sha1', this.salt).
+            update(password).
+            digest('hex')
         } catch (err) {
             return ''
         }
@@ -93,7 +105,7 @@ UserSchema.methods = {
      * 创建 salt
      * @returns {String} 返回salt
      */
-    makeSalt () {
+    makeSalt() {
         return String(Math.round(new Date().valueOf() * Math.random()))
     },
     /** 设置当前用户为超级管理员 */
@@ -110,7 +122,32 @@ UserSchema.methods = {
 
 /** 静态方法 */
 UserSchema.statics = {
-    
+    findAll({
+        page = 1,
+        pageSize = 20,
+        select = '',
+        criteria = {}
+    } = {}) {
+        pageSize = Math.min(30, pageSize)
+        return Promise.all([
+            this.find(criteria)
+            .select(select)
+            .sort({
+                createdAt: -1
+            })
+            .limit(pageSize)
+            .skip((page - 1) * pageSize),
+            this.countDocuments(criteria)
+        ]).then(res => {
+            return {
+                data: res[0],
+                page: {
+                    count: res[1],
+                    page,
+                    pageSize
+                }
+            }
+        })
+    }
 }
-
 module.exports = mongoose.model('User', UserSchema, 'user_ds')

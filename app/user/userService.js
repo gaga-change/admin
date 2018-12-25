@@ -1,7 +1,10 @@
 const User = require('./userSchema')
 const code = require('../code')
+const baseService = require('../tools/baseService')
 
 module.exports = {
+    DB: User,
+    ...baseService,
     /** 注册超级管理员 */
     async registerSuper(ctx, user) {
         const userCount = await User.count()
@@ -20,23 +23,5 @@ module.exports = {
         )
         ctx.session.user = findUser
         return findUser
-    },
-    /**
-     * 增加用户
-     */
-    async add(user) {
-        return await user.save()
-    },
-    /**
-     * 删除用户
-     */
-    async del(user) {
-        return await user.remove()
-    },
-    /**
-     * 修改用户
-     */
-    async modify(user) {
-        return await user.save()
     }
 }

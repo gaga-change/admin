@@ -2,6 +2,7 @@ const only = require('only')
 const userService = require('./userService')
 const code = require('../code')
 const tools = require('../tools')
+const baseController = require('../tools/baseController')
 
 module.exports = function(router) {
     // 注册 - 页面
@@ -19,6 +20,22 @@ module.exports = function(router) {
         let user = only(body, 'username password')
         ctx.body = await userService.login(ctx, user)
     })
+    // 列表 - 页面
+    router.get('/user/userList.html', async ctx => {
+        await ctx.render('user/userList', ctx.state)
+    })
+    // 表单 - 页面
+    router.get('/user/userForm.html', async ctx => {
+        let id = ctx.query.id
+        if (id) {
+            ctx.state.campus = await campusService.list(ctx, {
+                _id: id
+            })
+        } else {
+            ctx.state.campus = {}
+        }
+        await ctx.render('user/userForm', ctx.state)
+    })
     // 注册 - 接口 (特殊，不开放，只作为初始注册超级管理员用)
     router.post('/api/users/register', async ctx => {
         const { body } = ctx.request
@@ -28,11 +45,8 @@ module.exports = function(router) {
     })
     // 退出登录 - 接口
     router.get('/api/users/logout', async ctx => {
-        ctx.session.user = null
+        ctx.session = null
         ctx.body = ''
     })
-    // 查询所有用户 - 接口
-    // 删除用户 - 接口
-    // 修改 -  接口
-    // 查询单用户 - 接口
+    baseController(router, userService, 'users')
 }
