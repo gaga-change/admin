@@ -96,58 +96,21 @@ class="layui-layout-body" layadmin-themealias="fashion-red-header"
                             </dd>
                         </dl>
                     </li> -->
-                    <li data-name="home" class="layui-nav-item">
-                        <a href="javascript:;" lay-tips="测试" lay-direction="2">
-                            <i class="layui-icon layui-icon-home"></i>
-                            <cite>系统配置</cite>
+                    {% for menu in menuTree %}
+                    <li data-name="{{menu.sign}}" class="layui-nav-item">
+                        <a href="javascript:;" lay-tips="" lay-direction="2">
+                            <i class="{{menu.icon || ''}}"></i>
+                            <cite>{{menu.name}}</cite>
                             <span class="layui-nav-more"></span></a>
                         <dl class="layui-nav-child">
+                            {% for menuSon in menu.son %}
                             <dd data-name="costList" class="">
-                                <a lay-href="/cost/costList.html">费用配置</a>
+                                <a lay-href="{{menuSon.url}}">{{menuSon.name}}</a>
                             </dd>
-                            <dd data-name="referrerList" class="">
-                                <a lay-href="/referrer/referrerList.html">推荐人配置</a>
-                            </dd>
-                            <dd data-name="regPointList" class="">
-                                <a lay-href="/regPoint/regPointList.html">报名点配置</a>
-                            </dd>
-                            <dd data-name="classTypeList" class="">
-                                <a lay-href="/classType/classTypeList.html">班型配置</a>
-                            </dd>
-                            <dd data-name="campusList" class="">
-                                <a lay-href="/campus/campusList.html">校区配置</a>
-                            </dd>
-                            <dd data-name="payTypeList" class="">
-                                <a lay-href="/payType/payTypeList.html">支付方式配置</a>
-                            </dd>
-                            <dd data-name="costList" class="">
-                                <a lay-href="/responsible/responsibleList.html">责任人配置</a>
-                            </dd>
-                            <dd data-name="messageList" class="">
-                                <a lay-href="/message/messageList.html">消息通知</a>
-                            </dd>
-                            <dd data-name="costList" class="">
-                                <a lay-href="/cost/costList.html">操作员管理</a>
-                            </dd>
+                            {% endfor %}
                         </dl>
                     </li>
-                    <li data-name="user" class="layui-nav-item">
-                        <a href="javascript:;" lay-tips="用户" lay-direction="2">
-                            <i class="layui-icon layui-icon-user"></i>
-                            <cite>超级管理</cite>
-                            <span class="layui-nav-more"></span></a>
-                        <dl class="layui-nav-child">
-                            <dd>
-                                <a lay-href="user/user/list.html">管理员</a>
-                            </dd>
-                            <dd>
-                                <a lay-href="/menu/menuList.html">菜单管理</a>
-                            </dd>
-                            <dd>
-                                <a lay-href="user/administrators/role.html">角色管理</a>
-                            </dd>
-                        </dl>
-                    </li>
+                    {% endfor %}
                 </ul>
             </div>
         </div>

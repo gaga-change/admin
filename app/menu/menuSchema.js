@@ -54,6 +54,11 @@ const MenuSchema = new Schema({
     num: {
         default: 0,
         type: Number
+    },
+    // 层级
+    tier: {
+        default: 0,
+        type: Number
     }
 },{
     timestamps: true
