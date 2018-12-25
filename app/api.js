@@ -41,23 +41,28 @@ const myRouter = {
     put(...args) {
         this._(args, 'put')
     },
-    _(args, method, menuType) {
+    page(...args) {
+        this._(args, 'get', 'page')
+    },
+    _(args, method, isPage) {
         let opt = args.shift()
+        // 如果第一个参数传的为字符串， 则进行解析
         if (typeof opt == 'string') {
+            // 获取 url后缀
             const extname = path.extname(opt)
             opt = {
                 sign: opt,
                 url: opt
             }
-            if (extname == '.html' || menuType) {
+            // 如果后缀为 .html 则类型为 'page'
+            if (extname == '.html' || isPage) {
                 opt.type = 'page'
+            } else {
+                opt.sign = method + ':' + opt.sign 
             }
         }
         args.unshift(opt.url, auto(opt))
         router[method](...args)
-    },
-    page(...args) {
-        this._(args, 'get', 'page')
     }
 }
 
