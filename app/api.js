@@ -52,7 +52,6 @@ const myRouter = {
                 opt.type = 'page'
             }
         }
-        console.log(opt)
         args.unshift(opt.url, auto(opt))
         router[method](...args)
     },

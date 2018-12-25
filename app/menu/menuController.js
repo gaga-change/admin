@@ -25,7 +25,6 @@ module.exports = (router, auto) => {
                     _id: parentId
                 })
             }
-            console.log(ctx.state.menu)
         } else { // 添加一级
             ctx.state.menu = {}
         }
