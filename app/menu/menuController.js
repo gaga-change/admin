@@ -30,5 +30,5 @@ module.exports = (router) => {
         }
         await ctx.render('menu/menuForm', ctx.state)
     })
-    baseController(router, menuService, 'menus', tools.super)
+    baseController(router, menuService, 'menus', tools.super2)
 }

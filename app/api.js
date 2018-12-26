@@ -5,6 +5,7 @@ const path = require('path')
 const router = require('koa-router')()
 const site = require('../config/site')
 const auto = require('./auto')
+const User = require('./user/userSchema')
 const homeController = require('./home/homeController')
 const userController = require('./user/userController')
 const toolsController = require('./tools/toolsController')
@@ -22,12 +23,22 @@ const adminController = require('./user/adminController')
 // 绑定 用户&site配置项 到state中
 router.use(async (ctx, next) => {
     let user = ctx.session.user
-    ctx.state.user = user
-    ctx.state.admin = '' // 用户归属管理员id
-    ctx.state.area = ctx.host.substring(0, ctx.host.indexOf('.')) || '' // 子域名
-    if (user && user.type) {
-        ctx.state.admin = user._id
+    if (user) { // 已登录
+        let newUser = await User.findById(user._id)
+        if (!newUser) { // 账号被删除
+            ctx.session = null
+        } else { // 更新session 中用户信息
+            user = newUser
+            ctx.state.user = user
+            ctx.state.admin = '' // 用户归属管理员id
+            if (user && user.type) {
+                ctx.state.admin = user._id
+            } else {
+                ctx.state.admin = user.admin
+            }
+        }
     }
+    ctx.state.area = ctx.host.substring(0, ctx.host.indexOf('.')) || '' // 子域名
     for (let key in site) {
         ctx.state[key] = site[key]
     }
@@ -64,7 +75,7 @@ const myRouter = {
             if (extname == '.html' || isPage) {
                 opt.type = 'page'
             } else {
-                opt.sign = method + ':' + opt.sign 
+                opt.sign = method + ':' + opt.sign
             }
         }
         args.unshift(opt.url, auto(opt))

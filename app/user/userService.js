@@ -1,6 +1,7 @@
 const User = require('./userSchema')
 const code = require('../code')
 const baseService = require('../tools/baseService')
+const resourceSchemaArr = require('../tools/resourceSchemaArr')
 
 module.exports = {
     DB: User,
@@ -65,7 +66,6 @@ module.exports = {
     /** 登录 */
     async login(ctx, user) {
         // 根据域名获取 指定 管理员
-        ctx.assert(ctx.state.area, code.Unauthorized, '用户不存在')
         let admin = null
         if (ctx.state.area) admin = await User.findOne({
             area: ctx.state.area
@@ -104,5 +104,31 @@ module.exports = {
             return findUser
         }
 
+    },
+    /** 删除 */
+    async del(ctx, object) {
+        resourceSchemaArr.forEach(async schema => {
+            await schema.deleteMany({
+                admin: object._id
+            })
+        })
+        return await this.DB.deleteOne({
+            _id: object._id
+        })
+    },
+    /** 批量删除 */
+    async delMore(ctx, ids) {
+        resourceSchemaArr.forEach(async schema => {
+            await schema.deleteMany({
+                admin: {
+                    $in: ids
+                }
+            })
+        })
+        return await this.DB.deleteMany({
+            _id: {
+                $in: ids
+            }
+        })
     }
 }
