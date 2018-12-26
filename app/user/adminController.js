@@ -3,11 +3,8 @@ const userService = require('./userService')
 const code = require('../code')
 const tools = require('../tools')
 const Page = require('../tools/Page')
-// 用户类型
-const TYPE = {
-    SUPER: 'super',
-    ADMIN: 'admin'
-}
+const User = require('./userSchema')
+
 // 默认密码
 const DEFAULT_PASSWORD = '123456'
 
@@ -34,7 +31,7 @@ module.exports = function (router) {
         for (let key in object) {
             if (!object[key]) delete object[key]
         }
-        object.type = TYPE.ADMIN
+        object.type = 'admin'
         ctx.body = await userService.list(ctx, object, new Page(ctx.query))
     })
     // 增加管理员 - 接口
@@ -44,7 +41,7 @@ module.exports = function (router) {
         } = ctx.request
         let object = body
         object.password = DEFAULT_PASSWORD
-        object.type = TYPE.ADMIN
+        User.setAdmin(object)
         ctx.body = await userService.add(ctx, object)
     })
     // 删除管理员 - 接口
@@ -68,8 +65,10 @@ module.exports = function (router) {
         } = ctx.request
         let object = only(body, 'username remark status password')
         if (object.password === '') delete object.password
-        object.type = TYPE.ADMIN
+        delete object.type // 禁止修改 用户类型
+        delete object.typeName // 禁止修改 用户类型名称
         object._id = ctx.params.objectId
+        User.setAdmin(object)
         ctx.body = await userService.save(ctx, object)
     })
 }

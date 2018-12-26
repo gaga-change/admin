@@ -123,6 +123,16 @@ UserSchema.methods = {
 
 /** 静态方法 */
 UserSchema.statics = {
+    /** 设置当前用户为超级管理员 */
+    setSuper(obj) {
+        obj.type = TYPE.SUPER
+        obj.typeName = "超级管理员"
+    },
+    /** 设置当前用户为管理员 */
+    setAdmin(obj) {
+        obj.type = TYPE.ADMIN
+        obj.typeName = "管理员"
+    },
     findAll({
         page = 1,
         pageSize = 20,
