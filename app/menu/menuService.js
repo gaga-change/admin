@@ -1,5 +1,5 @@
 const Menu = require('./menuSchema')
-const baseService = require('../tools/baseService')
+const baseService = require('../base/baseService')
 const code = require('../code')
 
 module.exports = {

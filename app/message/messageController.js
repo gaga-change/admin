@@ -3,7 +3,7 @@ const code = require('../code')
 const tools = require('../tools')
 const Page = require('../tools/Page')
 const messageService = require('./messageService')
-const baseController = require('../tools/baseController')
+const baseController = require('../base/baseController')
 module.exports = router => {
     // 列表 - 页面
     router.get('/message/messageList.html', async ctx => {

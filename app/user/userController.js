@@ -3,7 +3,7 @@ const userService = require('./userService')
 const code = require('../code')
 const tools = require('../tools')
 const Page = require('../tools/Page')
-const baseController = require('../tools/baseController')
+const baseController = require('../base/baseController')
 
 module.exports = function (router) {
     // 注册 - 页面

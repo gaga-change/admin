@@ -1,9 +1,6 @@
-const only = require('only')
-const code = require('../code')
-const tools = require('../tools')
-const Page = require('../tools/Page')
+
 const referrerService = require('./referrerService')
-const baseController = require('../tools/baseController')
+const baseController = require('../../base/baseController')
 module.exports = router => {
     // 列表 - 页面
     router.get('/referrer/referrerList.html', async ctx => {

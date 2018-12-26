@@ -1,6 +1,6 @@
 const only = require('only')
 const Page = require('../tools/Page')
-const tools = require('./index')
+const tools = require('../tools/index')
 
 module.exports = (router, service, name, ...other) => {
     // 列表 - 接口

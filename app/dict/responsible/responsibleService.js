@@ -1,5 +1,5 @@
 const Responsible = require('./responsibleSchema')
-const baseService = require('../tools/baseService')
+const baseService = require('../../base/baseService')
 
 module.exports = {
     DB: Responsible,

@@ -1,5 +1,5 @@
 const Message = require('./messageSchema')
-const baseService = require('../tools/baseService')
+const baseService = require('../base/baseService')
 
 module.exports = {
     DB: Message,

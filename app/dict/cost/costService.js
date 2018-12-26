@@ -1,5 +1,5 @@
 const Cost = require('./costSchema')
-const baseService = require('../tools/baseService')
+const baseService = require('../../base/baseService')
 
 module.exports = {
     DB: Cost,

@@ -1,5 +1,5 @@
 const PayType = require('./payTypeSchema')
-const baseService = require('../tools/baseService')
+const baseService = require('../../base/baseService')
 
 module.exports = {
     DB: PayType,

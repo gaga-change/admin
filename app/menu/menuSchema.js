@@ -1,5 +1,4 @@
 const mongoose = require('mongoose')
-const dictBaseSchema = require('../tools/dictBaseSchema')
 const {
     Schema
 } = mongoose
