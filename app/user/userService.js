@@ -19,7 +19,13 @@ module.exports = {
         object.admin = ctx.state.admin
         const findUser = await this.DB.findOne({
             username: object.username,
-            admin: object.admin
+            $or: [{
+                    admin: object.admin
+                },
+                {
+                    area: ctx.state.area
+                }
+            ]
         })
         ctx.assert(!findUser, code.BadRequest, '用户名已存在')
         if (object.area) { // 域名不能相同
