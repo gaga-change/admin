@@ -16,6 +16,10 @@ const DictBaseSchema = new Schema({
     remark: {
         default: '',
         type: String
+    },
+    admin: {
+        ref: 'User',
+        type: Schema.Types.ObjectId
     }
 })
 

@@ -8,8 +8,12 @@ const MessageSchema = new Schema({
     content: {
         default: '',
         type: String
+    },
+    admin: {
+        ref: 'User',
+        type: Schema.Types.ObjectId
     }
-},{
+}, {
     timestamps: true
 })
 

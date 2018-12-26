@@ -2,6 +2,7 @@ module.exports = {
     /** 增加 */
     async add(ctx, object) {
         object = new this.DB(object)
+        object.admin = ctx.state.admin
         return await object.save()
     },
     /** 删除 */
@@ -20,12 +21,14 @@ module.exports = {
     },
     /** 修改 */
     async modify(ctx, object) {
+        delete object.admin
         return await this.DB.updateOne({
             _id: object._id
         }, object)
     },
     /** 查询 */
     async list(ctx, object, page) {
+        object.admin = ctx.state.admin
         if (page) {
             let criteria = {}
             this.DB.schema.eachPath(function(path) {

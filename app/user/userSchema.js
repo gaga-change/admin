@@ -56,6 +56,10 @@ const UserSchema = new Schema({
     status: {
         default: false,
         type: Boolean
+    },
+    admin: {
+        ref: 'User',
+        type: Schema.Types.ObjectId
     }
 }, {
     timestamps: true

@@ -16,6 +16,7 @@ module.exports = {
     },
     /** 增加 */
     async add(ctx, object) {
+        object.admin = ctx.state.admin
         const findUser = await this.DB.findOne({username: object.username})
         ctx.assert(!findUser, code.BadRequest, '用户名已存在')
         object = new this.DB(object)
