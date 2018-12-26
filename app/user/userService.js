@@ -1,7 +1,7 @@
 const User = require('./userSchema')
 const code = require('../code')
 const baseService = require('../base/baseService')
-const resourceSchemaArr = require('../tools/resourceSchemaArr')
+const resourceSchemaArr = require('../resourceSchemaArr')
 
 module.exports = {
     DB: User,
