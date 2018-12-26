@@ -21,12 +21,10 @@ const adminController = require('./user/adminController')
 
 // 绑定 用户&site配置项 到state中
 router.use(async (ctx, next) => {
-    console.log(ctx.host)
     let user = ctx.session.user
     ctx.state.user = user
     ctx.state.admin = '' // 用户归属管理员id
     ctx.state.area = ctx.host.substring(0, ctx.host.indexOf('.')) || '' // 子域名
-    console.log(ctx.state.area)
     if (user && user.type) {
         ctx.state.admin = user._id
     }

@@ -4,13 +4,13 @@ const tools = require('../tools')
 const Page = require('../tools/Page')
 const menuService = require('./menuService')
 const baseController = require('../tools/baseController')
-module.exports = (router, auto) => {
+module.exports = (router) => {
     // 列表 - 页面
-    router.get('/menu/menuList.html', async ctx => {
+    router.get('/menu/menuList.html', tools.super, async ctx => {
         await ctx.render('menu/menuList', ctx.state)
     })
     // 表单 - 页面
-    router.get('/menu/menuForm.html', async ctx => {
+    router.get('/menu/menuForm.html', tools.super, async ctx => {
         let {
             id,
             parentId
@@ -30,5 +30,5 @@ module.exports = (router, auto) => {
         }
         await ctx.render('menu/menuForm', ctx.state)
     })
-    baseController(router, menuService, 'menus')
+    baseController(router, menuService, 'menus', tools.super)
 }
