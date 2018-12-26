@@ -57,8 +57,7 @@ module.exports = {
             let {
                 sign,
                 tier,
-                parent,
-                url
+                parent
             } = item
             let parentSign = parent && parent.sign
             let tree = menuTree[tier]
@@ -79,7 +78,10 @@ module.exports = {
                 }
             }
         })
-        return menuTree[0]
+        menuTree = menuTree[0]
+        const isSuper = ctx.session.user && ctx.session.user.type == 'super'
+        if (!isSuper) delete menuTree.super
+        return menuTree
     },
     /** 查询 */
     async list(ctx, object, page) {
