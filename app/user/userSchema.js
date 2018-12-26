@@ -57,6 +57,10 @@ const UserSchema = new Schema({
         default: false,
         type: Boolean
     },
+    // 域名
+    area: {
+        type: String
+    },
     admin: {
         ref: 'User',
         type: Schema.Types.ObjectId

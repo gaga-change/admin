@@ -63,7 +63,7 @@ module.exports = function (router) {
         const {
             body
         } = ctx.request
-        let object = only(body, 'username remark status password')
+        let object = only(body, 'username remark status password area')
         if (object.password === '') delete object.password
         delete object.type // 禁止修改 用户类型
         delete object.typeName // 禁止修改 用户类型名称
