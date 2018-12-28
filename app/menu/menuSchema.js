@@ -70,7 +70,7 @@ MenuSchema.statics = {
         select = '',
         criteria = {}
     } = {}) {
-        pageSize = Math.min(30, pageSize)
+        pageSize = Number(pageSize)
         return Promise.all([
             this.find(criteria)
             .select(select)

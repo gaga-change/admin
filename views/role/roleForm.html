@@ -1,4 +1,7 @@
 {% extends '../template/layout2.html' %}
+{% block link %}
+<link rel="stylesheet" href="/css/metroStyle/metroStyle.css" type="text/css">
+{% endblock %}
 {% block content %}
 <div class="layui-form" lay-filter="layuiadmin-app-form-list" id="layuiadmin-app-form-list" style="padding: 20px 30px 0 0;">
     <div class="layui-form-item">
@@ -6,6 +9,13 @@
         <div class="layui-input-inline">
             <input type="text" name="name" lay-verify="required" placeholder="请输入名称" autocomplete="off" class="layui-input"
                 value="{{role.name}}">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">权限</label>
+        <div class="layui-input-inline">
+            <ul id="treeDemo" class="ztree"></ul>
+
         </div>
     </div>
     <div class="layui-form-item">
@@ -21,7 +31,37 @@
 </div>
 {% endblock %}
 {% block script %}
+<script type="text/javascript" src="/js/jquery.ztree.core.js"></script>
+<script type="text/javascript" src="/js/jquery.ztree.excheck.js"></script>
 <script>
+    $(function () {
+        $.get('/api/menus?page=1&pageSize=9999&show=true').then(function (res) {
+            res.data.forEach(function (item) {
+                if (item.parent) {
+                    item.pId = item.parent.sign
+                }
+                if (!item.url) item.open = true
+                delete item.url
+                item.id = item.sign
+            })
+
+            var zNodes = res.data
+            var setting = {
+                check: {
+                    enable: true
+                },
+                data: {
+                    simpleData: {
+                        enable: true
+                    }
+                }
+            }
+            $(document).ready(function () {
+                $.fn.zTree.init($("#treeDemo"), setting, zNodes);
+            });
+
+        })
+    })
     layui.config({
         base: '/' //静态资源所在路径
     }).extend({
@@ -31,7 +71,7 @@
             admin = layui.admin
         form = layui.form;
         form.on('submit()', function (data) {
-            $('input[type=checkbox]').each(function(index, ele) {
+            $('input[type=checkbox]').each(function (index, ele) {
                 ele = $(ele)
                 var key = ele.attr('name')
                 data.field[key] = data.field[key] || false
