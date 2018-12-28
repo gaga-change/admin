@@ -12,6 +12,7 @@ const dictApi = require('./dict/dictApi')
 const messageController = require('./message/messageController')
 const menuController = require('./menu/menuController')
 const adminController = require('./user/adminController')
+const roleController = require('./role/roleController')
 
 // 绑定 用户&site配置项 到state中
 router.use(async (ctx, next) => {
@@ -82,5 +83,6 @@ dictApi(myRouter)
 messageController(myRouter)
 menuController(myRouter)
 adminController(myRouter)
+roleController(myRouter)
 
 module.exports = router.routes()
