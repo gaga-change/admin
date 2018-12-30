@@ -2,7 +2,7 @@
 {% block content %}
 <div class="layui-fluid">
     <div class="layui-card">
-        <div class="layui-form layui-card-header layuiadmin-card-header-auto" >
+        <div class="layui-form layui-card-header layuiadmin-card-header-auto">
             <div class="layui-form-item">
                 <div class="layui-inline">
                     <label class="layui-form-label">名称</label>
@@ -185,6 +185,11 @@
                         iframe.layui.form.on("submit(layuiadmin-app-form-edit)",
                             function (sonObj) {
                                 var field = sonObj.field;
+                                var checkAuthList = iframe.treeObj.getCheckedNodes(true)
+                                field.authority = []
+                                checkAuthList.forEach(function (item) {
+                                    field.authority.push(item.sign)
+                                })
                                 admin.req({
                                     type: 'put',
                                     url: '/api/roles/' + data._id,

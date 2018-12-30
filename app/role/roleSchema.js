@@ -12,9 +12,9 @@ const RoleSchema = new Schema({
         default: '',
         type: String
     },
-    admin: {
-        ref: 'User',
-        type: Schema.Types.ObjectId
+    authority: {
+        default: [],
+        type: Array
     }
 }, {
     timestamps: true

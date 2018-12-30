@@ -34,6 +34,10 @@
 <script type="text/javascript" src="/js/jquery.ztree.core.js"></script>
 <script type="text/javascript" src="/js/jquery.ztree.excheck.js"></script>
 <script>
+    // 定义权限 sign 名不能有`,`
+    var authority = '{{role.authority.join(",")}}'
+    authority += ','
+    var treeObj = null
     $(function () {
         $.get('/api/menus?page=1&pageSize=9999&show=true').then(function (res) {
             res.data.forEach(function (item) {
@@ -43,8 +47,10 @@
                 if (!item.url) item.open = true
                 delete item.url
                 item.id = item.sign
+                if (~authority.indexOf(item.sign + ',')) {
+                    item.checked = true
+                }
             })
-
             var zNodes = res.data
             var setting = {
                 check: {
@@ -57,7 +63,9 @@
                 }
             }
             $(document).ready(function () {
-                $.fn.zTree.init($("#treeDemo"), setting, zNodes);
+                treeObj = $.fn.zTree.init($("#treeDemo"), setting, zNodes);
+                // var treeObj = $.fn.zTree.getZTreeObj("tree");
+                // var nodes = treeObj.getChangeCheckedNodes();
             });
 
         })
@@ -77,11 +85,17 @@
                 data.field[key] = data.field[key] || false
             })
             return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
-        });
+        })
         //监听提交
         form.on('submit(layuiadmin-app-form-submit)', function (data) {
             var field = data.field; //获取提交的字段
-            var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引  
+            var index = parent.layer.getFrameIndex(window.name) //先得到当前iframe层的索引
+            var checkAuthList = treeObj.getCheckedNodes(true)
+            field.authority = []
+            checkAuthList.forEach(function(item) {
+                field.authority.push(item.sign)
+            })
+            console.log(field)
             //提交 Ajax 成功后，关闭当前弹层并重载表格
             admin.req({
                 type: 'post',
@@ -92,7 +106,7 @@
                     parent.layer.close(index); //再执行关闭 
                 }
             })
-        });
+        })
     })
 </script>
 {% endblock %}

@@ -214,7 +214,10 @@
                 url: '/api/menus/' + data._id,
                 data: data,
                 success: function (res) {
-                    layer.msg('保存成功', {icon: 6, offset: 'rb'})
+                    layer.msg('保存成功', {
+                        icon: 6,
+                        offset: 'rb'
+                    })
                 }
             })
         });
@@ -245,6 +248,10 @@
                             iframe.layui.form.on("submit(layuiadmin-app-form-edit)",
                                 function (sonObj) {
                                     var field = sonObj.field;
+                                    if (~field.sign.indexOf(',')) {
+                                        layer.msg(`标识不能含有','`)
+                                        return
+                                    }
                                     admin.req({
                                         type: 'put',
                                         url: '/api/menus/' + data._id,
