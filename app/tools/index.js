@@ -10,7 +10,7 @@ module.exports = {
             return ctx.response.redirect('/user/login.html')
         }
     },
-    /** checkAuth2 */
+    /** 页面登入校验 (接口) */
     async checkAuth2(ctx, next) {
         ctx.assert(ctx.session.user, code.Forbidden, 'GO_LOGIN')
         return next()

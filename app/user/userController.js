@@ -5,6 +5,9 @@ const tools = require('../tools')
 const Page = require('../tools/Page')
 const baseController = require('../base/baseController')
 
+// 默认密码
+const DEFAULT_PASSWORD = '123456'
+
 module.exports = function (router) {
     // 注册 - 页面
     router.get('/user/register.html', async (ctx, next) => {
@@ -53,6 +56,52 @@ module.exports = function (router) {
         }
         await ctx.render('user/userForm', ctx.state)
     })
-
-    baseController(router, userService, 'users')
+    // 列表 - 接口
+    router.get(`/api/users`, tools.checkAuth2, async ctx => {
+        let object = ctx.query
+        for (let key in object) {
+            if (!object[key]) delete object[key]
+        }
+        ctx.body = await userService.list(ctx, object, new Page(ctx.query))
+    })
+    // 列表(单) - 接口
+    router.get(`/api/users/:objectId`, tools.checkAuth2, async ctx => {
+        const objectId = ctx.params.objectId
+        let object = ctx.query
+        object._id = objectId
+        ctx.body = await userService.list(ctx, object)
+    })
+    // 增加（子用户） - 接口
+    router.post(`/api/users`, tools.checkAuth2, async ctx => {
+        const {
+            body
+        } = ctx.request
+        let object = body
+        object.password = DEFAULT_PASSWORD // 附加默认密码
+        ctx.body = await userService.add(ctx, object)
+    })
+    // 删除 - 接口
+    router.delete(`/api/users/:objectId`, tools.checkAuth2, async ctx => {
+        const objectId = ctx.params.objectId
+        let object = {
+            _id: objectId
+        }
+        ctx.body = await userService.del(ctx, object)
+    })
+    // 删除多个 - 接口
+    router.delete(`/api/users`, tools.checkAuth2, async ctx => {
+        let ids = ctx.query.ids
+        ids = ids.split(`,`)
+        ctx.body = await userService.delMore(ctx, ids)
+    })
+    // 修改 - 接口
+    router.put(`/api/users/:objectId`, tools.checkAuth2, async ctx => {
+        const {
+            body
+        } = ctx.request
+        let object = only(body, 'username remark status password area')
+        if (object.password === '') delete object.password
+        object._id = ctx.params.objectId
+        ctx.body = await userService.save(ctx, object)
+    })
 }

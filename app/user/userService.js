@@ -40,6 +40,7 @@ module.exports = {
     },
     /** 修改保存 (支持修改密码) */
     async save(ctx, object) {
+        object.admin = ctx.state.admin
         const findUser = await this.DB.findOne({
             _id: {
                 $ne: object._id
