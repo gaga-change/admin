@@ -8,6 +8,23 @@
                 value="{{userData.username}}">
         </div>
     </div>
+    {% if userData.username %}
+    <div class="layui-form-item">
+        <label class="layui-form-label">密码</label>
+        <div class="layui-input-inline">
+            <input type="password" name="password" lay-verify="" placeholder="重置密码" autocomplete="off" class="layui-input"
+                value="">
+        </div>
+    </div>
+    {% endif%}
+    {% if !userData.username %}
+    <div class="layui-form-item">
+        <label class="layui-form-label">密码</label>
+        <span style="line-height:38px;">
+            123456
+        </span>
+    </div>
+    {% endif%}
     <div class="layui-form-item">
         <label class="layui-form-label">备注</label>
         <div class="layui-input-inline">
