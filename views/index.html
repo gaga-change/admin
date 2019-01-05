@@ -154,6 +154,7 @@ class="layui-layout-body" layadmin-themealias="fashion-red-header"
 {% block script %}
 <script>
     layui.config({
+        version: "{{version}}",
         base: '/' //静态资源所在路径
     }).extend({
         index: 'js/lib/index' //主入口模块
