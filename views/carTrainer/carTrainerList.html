@@ -86,20 +86,21 @@
                     });
                 },
                 add: function () {
-                    layer.open({
-                        type: 2,
-                        title: '添加消息',
-                        content: '/carTrainer/carTrainerForm.html',
-                        maxmin: true,
-                        area: ['550px', '550px'],
-                        btn: ['确定', '取消'],
-                        yes: function (index, layero) {
-                            //点击确认触发 iframe 内容中的按钮提交
-                            var submit = layero.find('iframe').contents().find(
-                                "#layuiadmin-app-form-submit");
-                            submit.click();
-                        }
-                    });
+                    top.layui && top.layui.index.openTabsPage('/carTrainer/carTrainerForm.html', '添加教练')
+                    // layer.open({
+                    //     type: 2,
+                    //     title: '添加教练',
+                    //     content: '/carTrainer/carTrainerForm.html',
+                    //     maxmin: true,
+                    //     area: ['550px', '550px'],
+                    //     btn: ['确定', '取消'],
+                    //     yes: function (index, layero) {
+                    //         //点击确认触发 iframe 内容中的按钮提交
+                    //         var submit = layero.find('iframe').contents().find(
+                    //             "#layuiadmin-app-form-submit");
+                    //         submit.click();
+                    //     }
+                    // });
                 }
             };
 
@@ -178,7 +179,7 @@
             function (obj) {
                 var data = obj.data;
                 if ("del" === obj.event) {
-                    layer.confirm("确定删除此消息？", function (index) {
+                    layer.confirm("确定删除此教练？", function (index) {
                         admin.req({
                             type: 'delete',
                             url: '/api/carTrainers/' + data._id
@@ -187,11 +188,12 @@
                         layer.close(index)
                     })
                 } else if ("edit" === obj.event) {
-                    top.layui && top.layui.index.openTabsPage('/carTrainer/carTrainerForm.html?id=' + data._id, data.name)
+                    top.layui && top.layui.index.openTabsPage('/carTrainer/carTrainerForm.html?id=' + data._id,
+                        data.name)
                 }
                 // layer.open({
                 //     type: 2,
-                //     title: "编辑消息",
+                //     title: "编辑教练",
                 //     content: "/carTrainer/carTrainerForm.html?id=" + data._id,
                 //     maxmin: !0,
                 //     area: ["550px", "550px"],

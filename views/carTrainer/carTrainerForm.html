@@ -7,27 +7,27 @@
 </style>
 {% endblock %}
 {% block content %}
-<div class="layui-form" lay-filter="layuiadmin-app-form-list" id="layuiadmin-app-form-list" style="padding: 20px 30px 0 0;">
-
+<form class="layui-form" lay-filter="layuiadmin-app-form-list" id="layuiadmin-app-form-list" style="padding: 20px 30px 0 0;">
+    <input type="hidden" name="id" id="carTrainerId" value="{{carTrainer.id}}">
     <div class="layui-form-item">
         <div class="layui-inline">
             <label class="layui-form-label required">姓名</label>
             <div class="layui-input-inline">
-                <input type="text" name="name" value="{{carTrainer.name || 'gaga'}}" lay-verify="required" placeholder=""
+                <input type="text" name="name" value="{{carTrainer.name}}" lay-verify="required" placeholder=""
                     minlength="1" maxlength="10" autocomplete="off" class="layui-input">
             </div>
         </div>
         <div class="layui-inline">
             <label class="layui-form-label required">身份证</label>
             <div class="layui-input-inline">
-                <input type="text" name="card" value="{{carTrainer.card || 330721199501022919}}" lay-verify="identity"
+                <input type="text" name="card" value="{{carTrainer.card}}" lay-verify="identity"
                     placeholder="" autocomplete="off" class="layui-input">
             </div>
         </div>
         <div class="layui-inline">
             <label class="layui-form-label required">手机号</label>
             <div class="layui-input-inline">
-                <input type="text" name="phone" value="{{carTrainer.phone || 15557988872}}" lay-verify="phone"
+                <input type="text" name="phone" value="{{carTrainer.phone}}" lay-verify="phone"
                     placeholder="" autocomplete="off" class="layui-input">
             </div>
         </div>
@@ -45,8 +45,10 @@
         <div class="layui-inline">
             <label class="layui-form-label">培训科目</label>
             <div class="layui-input-block">
-                <input type="checkbox" name="subjects" title="科目一" value="科目一">
-                <input type="checkbox" name="subjects" title="科目二" value="科目二">
+                <input type="checkbox" name="subjects" title="科目一" value="科目一" {% if carTrainer.subjects &&
+                    carTrainer.subjects.includes('科目一') %} checked="checked" {% endif %}>
+                <input type="checkbox" name="subjects" title="科目二" value="科目二" {% if carTrainer.subjects &&
+                    carTrainer.subjects.includes('科目二') %} checked="checked" {% endif %}>
             </div>
         </div>
     </div>
@@ -54,8 +56,10 @@
         <div class="layui-inline">
             <label class="layui-form-label">培训车型</label>
             <div class="layui-input-block">
-                <input type="checkbox" name="carTypes" title="C1" value="C1">
-                <input type="checkbox" name="carTypes" title="C2" value="C2">
+                <input type="checkbox" name="carTypes" title="C1" value="C1" {% if carTrainer.carTypes &&
+                    carTrainer.carTypes.includes('C1') %} checked="checked" {% endif %}>
+                <input type="checkbox" name="carTypes" title="C2" value="C2" {% if carTrainer.carTypes &&
+                    carTrainer.carTypes.includes('C2') %} checked="checked" {% endif %}>
             </div>
         </div>
     </div>
@@ -69,11 +73,15 @@
     </div>
     <div class="layui-form-item">
         <div class="layui-input-block">
-            <button class="layui-btn" lay-submit="" lay-filter="submit">立即提交</button>
+            {% if carTrainer.id %}
+            <button class="layui-btn" lay-submit="" lay-filter="submit">保存编辑</button>
+            {% endif %}
+            {% if !carTrainer.id %} <button class="layui-btn" lay-submit="" lay-filter="submit">添加教练</button>
             <button type="reset" class="layui-btn layui-btn-primary" id="rest">重置</button>
+            {% endif %}
         </div>
     </div>
-</div>
+</form>
 {% endblock %}
 {% block script %}
 <script>
@@ -93,14 +101,27 @@
             field.subjects = getCheckBoxVal('subjects')
             field.carTypes = getCheckBoxVal('carTypes')
             field.status = !!field.status
-            admin.req({
-                type: 'post',
-                url: '/api/carTrainers',
-                data: field,
-                success: function (res) {
-                    layer.msg('保存成功')
-                }
-            })
+            var carTrainerId = $('#carTrainerId').val()
+            if (carTrainerId) {
+                admin.req({
+                    type: 'put',
+                    url: '/api/carTrainers/' + carTrainerId,
+                    data: field,
+                    success: function (res) {
+                        layer.msg('保存成功')
+                    }
+                })
+            } else {
+                admin.req({
+                    type: 'post',
+                    url: '/api/carTrainers',
+                    data: field,
+                    success: function (res) {
+                        $('#rest')[0].click()
+                        layer.msg('保存成功')
+                    }
+                })
+            }
             return false;
         });
 
