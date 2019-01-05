@@ -12,6 +12,7 @@ module.exports = {
         ctx.assert(!userCount, code.Unauthorized, '无权操作')
         user = new User(user)
         user.status = true
+        user.area = 'ds'
         user.setSuper()
         return await user.save()
     },
@@ -68,43 +69,29 @@ module.exports = {
     async login(ctx, user) {
         // 根据域名获取 指定 管理员
         let admin = null
-        if (ctx.state.area) admin = await User.findOne({
+        admin = await User.findOne({
             area: ctx.state.area
         })
-        if (admin) { // 普通用户 || 管理员登录
-            const findUser = await User.findOne({
-                username: user.username,
-                $or: [{
-                        admin
-                    },
-                    {
-                        area: ctx.state.area
-                    }
-                ]
-            })
-            ctx.assert(findUser, code.Unauthorized, '用户不存在')
-            ctx.assert(findUser.status, code.Unauthorized, '当前账户未启用，请联系管理员！')
-            ctx.assert(
-                findUser.authenticate(user.password),
-                code.Unauthorized, '密码错误'
-            )
-            ctx.session.user = findUser
-            return findUser
-        } else { // 超级管理员登录
-            const findUser = await User.findOne({
-                username: user.username,
-                type: 'super'
-            })
-            ctx.assert(findUser, code.Unauthorized, '用户不存在')
-            ctx.assert(findUser.status, code.Unauthorized, '当前账户未启用，请联系管理员！')
-            ctx.assert(
-                findUser.authenticate(user.password),
-                code.Unauthorized, '密码错误'
-            )
-            ctx.session.user = findUser
-            return findUser
-        }
-
+        ctx.assert(admin, code.Unauthorized, '用户不存在')
+        // 普通用户 || 管理员登录 || 超级管理员
+        const findUser = await User.findOne({
+            username: user.username,
+            $or: [{
+                    admin
+                },
+                {
+                    area: ctx.state.area
+                }
+            ]
+        })
+        ctx.assert(findUser, code.Unauthorized, '用户不存在')
+        ctx.assert(findUser.status, code.Unauthorized, '当前账户未启用，请联系管理员！')
+        ctx.assert(
+            findUser.authenticate(user.password),
+            code.Unauthorized, '密码错误'
+        )
+        ctx.session.user = findUser
+        return findUser
     },
     /** 删除 */
     async del(ctx, object) {

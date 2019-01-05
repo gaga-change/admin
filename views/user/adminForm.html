@@ -14,6 +14,9 @@
             <input type="text" name="area" lay-verify="required" placeholder="请输入" autocomplete="off" class="layui-input"
                 value="{{userData.area}}">
         </div>
+        <span style="line-height:38px;">
+            .ds.junn.top
+        </span>
     </div>
     {% if userData.username %}
     <div class="layui-form-item">
@@ -22,6 +25,14 @@
             <input type="password" name="password" lay-verify="" placeholder="重置密码" autocomplete="off" class="layui-input"
                 value="">
         </div>
+    </div>
+    {% endif%}
+    {% if !userData.username %}
+    <div class="layui-form-item">
+        <label class="layui-form-label">密码</label>
+        <span style="line-height:38px;">
+            123456
+        </span>
     </div>
     {% endif%}
     <div class="layui-form-item">
