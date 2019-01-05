@@ -1,15 +1,77 @@
 {% extends '../template/layout2.html' %}
+{% block link %}
+<style>
+    body {
+        background: #fff;
+    }
+</style>
+{% endblock %}
 {% block content %}
 <div class="layui-form" lay-filter="layuiadmin-app-form-list" id="layuiadmin-app-form-list" style="padding: 20px 30px 0 0;">
+
     <div class="layui-form-item">
-        <label class="layui-form-label">消息</label>
-        <div class="layui-input-inline">
-            <textarea name="content" lay-verify="" style="width: 400px; height: 150px;" autocomplete="off" class="layui-textarea">{{carTrainer.content}}</textarea>
+        <div class="layui-inline">
+            <label class="layui-form-label required">姓名</label>
+            <div class="layui-input-inline">
+                <input type="text" name="name" value="{{carTrainer.name || 'gaga'}}" lay-verify="required" placeholder=""
+                    minlength="1" maxlength="10" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-inline">
+            <label class="layui-form-label required">身份证</label>
+            <div class="layui-input-inline">
+                <input type="text" name="card" value="{{carTrainer.card || 330721199501022919}}" lay-verify="identity"
+                    placeholder="" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-inline">
+            <label class="layui-form-label required">手机号</label>
+            <div class="layui-input-inline">
+                <input type="text" name="phone" value="{{carTrainer.phone || 15557988872}}" lay-verify="phone"
+                    placeholder="" autocomplete="off" class="layui-input">
+            </div>
         </div>
     </div>
-    <div class="layui-form-item layui-hide">
-        <input type="button" lay-submit lay-filter="layuiadmin-app-form-submit" id="layuiadmin-app-form-submit" value="确认添加">
-        <input type="button" lay-submit lay-filter="layuiadmin-app-form-edit" id="layuiadmin-app-form-edit" value="确认编辑">
+    <div class="layui-form-item">
+        <div class="layui-inline">
+            <label class="layui-form-label">性别</label>
+            <div class="layui-input-inline">
+                <input type="radio" name="sex" value="男" title="男" {% if carTrainer.sex=='男' || !carTrainer.sex %}
+                    checked="checked" {% endif %}>
+                <input type="radio" name="sex" value="女" title="女" {% if carTrainer.sex=='女' %} checked="checked" {%
+                    endif %}>
+            </div>
+        </div>
+        <div class="layui-inline">
+            <label class="layui-form-label">培训科目</label>
+            <div class="layui-input-block">
+                <input type="checkbox" name="subjects" title="科目一" value="科目一">
+                <input type="checkbox" name="subjects" title="科目二" value="科目二">
+            </div>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <div class="layui-inline">
+            <label class="layui-form-label">培训车型</label>
+            <div class="layui-input-block">
+                <input type="checkbox" name="carTypes" title="C1" value="C1">
+                <input type="checkbox" name="carTypes" title="C2" value="C2">
+            </div>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <div class="layui-inline">
+            <label class="layui-form-label">状态</label>
+            <div class="layui-input-inline">
+                <input type="checkbox" lay-verify="required" lay-filter="status" name="status" lay-skin="switch"
+                    lay-text="启用|不启用" value="true" {% if carTrainer.status %} checked="checked" {% endif %}> </div>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <div class="layui-input-block">
+            <button class="layui-btn" lay-submit="" lay-filter="submit">立即提交</button>
+            <button type="reset" class="layui-btn layui-btn-primary" id="rest">重置</button>
+        </div>
     </div>
 </div>
 {% endblock %}
@@ -20,32 +82,37 @@
     }).extend({
         index: 'js/lib/index' //主入口模块
     }).use(['index', 'form'], function () {
-        var $ = layui.$,
-            admin = layui.admin
-        form = layui.form;
-        form.on('submit()', function (data) {
-            $('input[type=checkbox]').each(function(index, ele) {
-                ele = $(ele)
-                var key = ele.attr('name')
-                data.field[key] = data.field[key] || false
-            })
-            return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
-        });
-        //监听提交
-        form.on('submit(layuiadmin-app-form-submit)', function (data) {
-            var field = data.field; //获取提交的字段
-            var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引  
-            //提交 Ajax 成功后，关闭当前弹层并重载表格
+        var $ = layui.$
+        var admin = layui.admin
+        var form = layui.form
+        var layer = layui.layer
+
+        /* 监听提交 */
+        form.on('submit(submit)', function (data) {
+            var field = data.field
+            field.subjects = getCheckBoxVal('subjects')
+            field.carTypes = getCheckBoxVal('carTypes')
+            field.status = !!field.status
             admin.req({
                 type: 'post',
                 url: '/api/carTrainers',
                 data: field,
                 success: function (res) {
-                    parent.layui.table.reload('LAY-app-content-list'); //重载表格
-                    parent.layer.close(index); //再执行关闭 
+                    layer.msg('保存成功')
                 }
             })
+            return false;
         });
+
+        function getCheckBoxVal(name) {
+            var valArr = []
+            $('[name=' + name + ']').each(function (index, ele) {
+                if ($(ele).prop('checked')) {
+                    valArr.push($(ele).val())
+                }
+            })
+            return valArr
+        }
     })
 </script>
 {% endblock %}

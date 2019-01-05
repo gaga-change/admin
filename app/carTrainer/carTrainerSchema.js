@@ -4,9 +4,40 @@ const {
 } = mongoose
 
 const CarTrainerSchema = new Schema({
-    content: {
+    // 姓名
+    name: {
         default: '',
         type: String
+    },
+    // 身份证
+    card: {
+        default: '',
+        type: String
+    },
+    // 手机号
+    phone: {
+        default: '',
+        type: String
+    },
+    // 性别
+    sex: {
+        default: '',
+        type: String
+    },
+    // 培训科目
+    subjects: {
+        default: [],
+        type: Array
+    },
+    // 车型
+    carTypes: {
+        default: [],
+        type: Array
+    },
+    // 是否启用
+    status: {
+        default: false,
+        type: Boolean
     },
     admin: {
         ref: 'User',
