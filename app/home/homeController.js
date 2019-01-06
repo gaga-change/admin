@@ -22,4 +22,7 @@ module.exports = function (router, auto) {
     router.get('/tpl/system/about.html', async ctx => {
         await ctx.render('about', ctx.state)
     })
+    router.get('/console.html', async ctx => {
+        await ctx.render('console', ctx.state)
+    })
 }

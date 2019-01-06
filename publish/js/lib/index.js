@@ -46,7 +46,7 @@ layui.extend({
     })
     layui.each(setter.extend, function (index, name) {
         var obj = {};
-        obj[name] = "{/}" + setter.base + "lib/extend/" + name, layui.extend(obj)
+        obj[name] = "{/}/js/lib/extend/" + name, layui.extend(obj)
     })
     view().autoRender()
     layui.use("common")
