@@ -6,7 +6,7 @@ const config = {
     // 产品
     project: process.env.PROJECT || '测试版',
     // 版本
-    version: process.env.VERSION || '0.1.0-dev',
+    version: process.env.VERSION || '0.2.0-dev',
     theme:  process.env.ADMIN_NAME || '驾校管理系统'
 }
 
