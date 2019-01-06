@@ -1,3 +1,8 @@
 .red { color: #FF5722 }
 label.required { position: relative; }
 label.required:after { content: "*"; position: absolute; right: 5px; color: #FF5722; }
+
+/* layui.css 样式覆盖 */
+.layui-btn.layui-btn-primary {
+    background-color: #fff;
+}
