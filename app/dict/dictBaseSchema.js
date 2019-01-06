@@ -30,7 +30,7 @@ DictBaseSchema.statics = {
         select = '',
         criteria = {}
     } = {}) {
-        pageSize = Math.min(30, pageSize)
+        pageSize = Math.min(999, pageSize)
         return Promise.all([
             this.find(criteria)
             .select(select)

@@ -42,6 +42,9 @@ layui.define(["laytpl", "layer"], function (exports) {
                 "function" == typeof success && success(res)
             },
             error: function (res, error) {
+                if (res.responseText == 'GO_LOGIN') {
+                   return top.location.href = "/user/login.html"
+                }
                 layer.msg(res.responseText || '请求异常，请重试', {shift: 6});
             }
         }, options))
