@@ -14,6 +14,7 @@ const menuController = require('./menu/menuController')
 const adminController = require('./user/adminController')
 const roleController = require('./role/roleController')
 const carTrainerController = require('./carTrainer/carTrainerController')
+const carStudentController = require('./carStudent/carStudentController')
 
 // 绑定 用户&site配置项 到state中
 router.use(async (ctx, next) => {
@@ -86,5 +87,6 @@ menuController(myRouter)
 adminController(myRouter)
 roleController(myRouter)
 carTrainerController(myRouter)
+carStudentController(myRouter)
 
 module.exports = router.routes()
