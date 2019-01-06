@@ -29,4 +29,12 @@ module.exports = {
             _id: object._id
         }, object)
     },
+    /** 查询为启用教练 */
+    async noPassTrainerNum(ctx) {
+        const object = {
+            admin: ctx.state.admin,
+            status: false
+        }
+        return await this.DB.countDocuments(object)
+    }
 }

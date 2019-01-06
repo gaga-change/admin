@@ -7,6 +7,7 @@ const baseController = require('../base/baseController')
 module.exports = router => {
     // 列表 - 页面
     router.get('/carTrainer/carTrainerList.html', async ctx => {
+        ctx.state.carTrainer = ctx.query
         await ctx.render('carTrainer/carTrainerList', ctx.state)
     })
     // 表单 - 页面

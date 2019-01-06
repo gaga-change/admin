@@ -11,6 +11,22 @@
                     </div>
                 </div>
                 <div class="layui-inline">
+                        <label class="layui-form-label">证件类型</label>
+                        <div class="layui-input-inline">
+                            <select name="status" id="status">
+                                <option value="">全部</option>
+                                <option value="false"
+                                {% if carTrainer.status == 'false' %} selected="selected"
+                                            {% endif %}
+                                >未启用</option>
+                                <option value="true"
+                                {% if carTrainer.carType == 'true' %} selected="selected"
+                                            {% endif %}
+                                >启用</option>
+                            </select>
+                        </div>
+                    </div>
+                <div class="layui-inline">
                     <button class="layui-btn layuiadmin-btn-list" lay-submit lay-filter="LAY-app-contlist-search">
                         <i class="layui-icon layui-icon-search layuiadmin-button-btn"></i>
                     </button>
@@ -107,11 +123,14 @@
         $('.layui-btn.layuiadmin-btn-list').on('click', function () {
             var type = $(this).data('type');
             active[type] ? active[type].call(this) : '';
-        });
+        })
 
         table.render({
             elem: "#LAY-app-content-list",
             url: "/api/carTrainers",
+            where: {
+                status: $('#status').val(),
+            },
             parseData: function (res) { //res 即为原始返回的数据
                 res.data.forEach(function (item) {
                     item.createdAt = layui.util.timeAgo(item.createdAt, true)

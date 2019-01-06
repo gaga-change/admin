@@ -5,6 +5,7 @@
 const svgCaptcha = require('svg-captcha')
 const tools = require('../tools')
 const menuService = require('../menu/menuService')
+const carTrainerService = require('../carTrainer/carTrainerService')
 
 svgCaptcha.options.height = 38
 module.exports = function (router, auto) {
@@ -14,7 +15,9 @@ module.exports = function (router, auto) {
         await ctx.render('index', ctx.state)
     })
     router.get('/tools/captcha', async ctx => {
-        const captch = svgCaptcha.create({color: true})
+        const captch = svgCaptcha.create({
+            color: true
+        })
         ctx.session.captcha = captch.text.toLocaleLowerCase()
         ctx.type = 'svg'
         ctx.body = captch.data
@@ -22,7 +25,8 @@ module.exports = function (router, auto) {
     router.get('/tpl/system/about.html', async ctx => {
         await ctx.render('about', ctx.state)
     })
-    router.get('/console.html', async ctx => {
+    router.get('/console.html', tools.checkAuth, async ctx => {
+        ctx.state.noPassTrainerNum = await carTrainerService.noPassTrainerNum(ctx)
         await ctx.render('console', ctx.state)
     })
 }
