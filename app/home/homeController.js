@@ -19,4 +19,7 @@ module.exports = function (router, auto) {
         ctx.type = 'svg'
         ctx.body = captch.data
     })
+    router.get('/tpl/system/about.html', async ctx => {
+        await ctx.render('about', ctx.state)
+    })
 }
