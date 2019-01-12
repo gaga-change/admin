@@ -83,9 +83,67 @@ const dict = {
     }
 }
 
+// 状态
+const state = {
+    // 是否体检
+    healthExamination: {
+        default: false,
+        type: Boolean
+    },
+    // 数量默认为1。 
+    // 科目一考试次数 （默认1次）
+    subjectOneNum: {
+        default: 1,
+        type: Number
+    },
+    // 科目一考试状态 （false: 为通过 true: 通过）
+    subjectOne: {
+        default: null,
+        type: Boolean
+    },
+    // 科目二考试次数
+    subjectTwoNum:  {
+        default: 1,
+        type: Number
+    },
+    subjectTwo: {
+        default: null,
+        type: Boolean
+    },
+    // 科目三考试次数
+    subjectThreeNum:  {
+        default: 1,
+        type: Number
+    },
+    subjectThree: {
+        default: null,
+        type: Boolean
+    },
+    subjectHistory: [
+        {
+            // 考试日期
+            examDate: {
+                default: null,
+                type: Date,
+            },
+            // 是否通过。（false 为未通过， true 为通过）
+            state : {
+                default: null,
+                type: Boolean
+            },
+            // 考试科目 （1、 2、 3、 4）
+            subject: {
+                default: null,
+                type: Number
+            },
+        }
+    ]
+}
+
 const CarStudentSchema = new Schema({
     ...person,
     ...dict,
+    ...state,
     // 报名日期
     registerDate: {
         default: Date.now(),

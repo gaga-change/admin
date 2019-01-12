@@ -1,0 +1,253 @@
+{% extends '../template/layout.html' %}
+{% block content %}
+<div class="layui-fluid">
+    <div class="layui-card">
+        <div class="layui-form layui-card-header layuiadmin-card-header-auto">
+            <div class="layui-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label">姓名</label>
+                    <div class="layui-input-inline">
+                        <input type="text" name="name" placeholder="请输入" autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <button class="layui-btn layuiadmin-btn-list" lay-submit lay-filter="LAY-app-contlist-search">
+                        <i class="layui-icon layui-icon-search layuiadmin-button-btn"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="layui-card-body">
+            <div style="padding-bottom: 10px;">
+                <button class="layui-btn layuiadmin-btn-list" data-type="batchdel">删除</button>
+                <button class="layui-btn layuiadmin-btn-list" data-type="add">添加</button>
+            </div>
+            <table id="LAY-app-content-list" lay-filter="LAY-app-content-list"></table>
+            <script type="text/html" id="buttonTpl">
+                {% raw %}
+          {{#  if(d.status){ }}
+            <button class="layui-btn layui-btn-xs">已启用 </button>
+          {{#  } else { }}
+            <button class="layui-btn layui-btn-primary layui-btn-xs">未启用</button>
+          {{#  } }}
+          {% endraw %}
+        </script>
+            <script type="text/html" id="table-content-list">
+                <a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="edit"><i class="layui-icon layui-icon-edit"></i>查看</a>
+          <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del"><i class="layui-icon layui-icon-delete"></i>删除</a>
+        </script>
+        </div>
+    </div>
+</div>
+{% endblock %}
+{% block script %}
+<script>
+    layui.config({
+        base: '/' //静态资源所在路径
+    }).extend({
+        index: 'js/lib/index' //主入口模块
+    }).use(['index', 'table'], function () {
+        var table = layui.table,
+            admin = layui.admin,
+            form = layui.form;
+
+        //监听搜索
+        form.on('submit(LAY-app-contlist-search)', function (data) {
+            var field = data.field;
+            //执行重载
+            table.reload('LAY-app-content-list', {
+                where: field
+            });
+        });
+
+        var $ = layui.$,
+            active = {
+                batchdel: function () {
+                    var checkStatus = table.checkStatus('LAY-app-content-list'),
+                        checkData = checkStatus.data; //得到选中的数据
+
+                    if (checkData.length === 0) {
+                        return layer.msg('请选择数据');
+                    }
+                    layer.confirm('确定删除吗？', function (index) {
+                        var ids = []
+                        checkData.forEach(function (item) {
+                            ids.push(item._id)
+                        })
+                        admin.req({
+                            type: 'DELETE',
+                            url: '/api/carStudents?ids=' + ids.join(','),
+                            success: function (res) {
+                                table.reload('LAY-app-content-list');
+                                layer.msg('已删除');
+                            }
+                        })
+                    });
+                },
+                add: function () {
+                    top.layui && top.layui.index.openTabsPage('/carStudent/carStudentStateForm.html', '学员录入')
+                    // layer.open({
+                    //     type: 2,
+                    //     title: '学员录入',
+                    //     content: '/carStudent/carStudentStateForm.html',
+                    //     maxmin: true,
+                    //     area: ['550px', '550px'],
+                    //     btn: ['确定', '取消'],
+                    //     yes: function (index, layero) {
+                    //         //点击确认触发 iframe 内容中的按钮提交
+                    //         var submit = layero.find('iframe').contents().find(
+                    //             "#layuiadmin-app-form-submit");
+                    //         submit.click();
+                    //     }
+                    // });
+                }
+            };
+
+        $('.layui-btn.layuiadmin-btn-list').on('click', function () {
+            var type = $(this).data('type');
+            active[type] ? active[type].call(this) : '';
+        });
+
+        table.render({
+            elem: "#LAY-app-content-list",
+            url: "/api/carStudents",
+            parseData: function (res) { //res 即为原始返回的数据
+                res.data.forEach(function (item) {
+                    item.createdAt = layui.util.timeAgo(item.createdAt, true)
+                    item.registerDate = layui.util.toDateString(item.registerDate, 'yyyy-MM-dd')
+                })
+                return {
+                    "code": 0, //解析接口状态
+                    "msg": '', //解析提示文本
+                    "count": res.page.count, //解析数据长度
+                    "data": res.data //解析数据列表
+                };
+            },
+            text: {
+                none: '暂无相关数据'
+            },
+            cols: [
+                [{
+                        type: "checkbox",
+                        fixed: "left"
+                    },
+                    {
+                        field: "name",
+                        title: "姓名",
+                    },
+                    {
+                        field: "card",
+                        title: "证件号",
+                    }, {
+                        field: "phone",
+                        title: "手机号",
+                    }, {
+                        field: "classType",
+                        title: "班型",
+                    }, {
+                        field: "carType",
+                        title: "培训车型",
+                    },
+                    {
+                        field: "registerDate",
+                        title: "报名日期",
+                    },
+                    {
+                        field: "createdAt",
+                        title: "录入时间",
+                    },
+                    {
+                        title: "操作",
+                        minWidth: 150,
+                        align: "center",
+                        fixed: "right",
+                        toolbar: "#table-content-list"
+                    }
+                ]
+            ],
+            page: !0,
+            request: {
+                limitName: 'pageSize'
+            },
+            limit: 10,
+            limits: [10, 15, 20, 25, 30]
+        })
+        table.on("tool(LAY-app-content-list)",
+            function (obj) {
+                var data = obj.data;
+                if ("del" === obj.event) {
+                    layer.confirm("确定删除此学员？", function (index) {
+                        admin.req({
+                            type: 'delete',
+                            url: '/api/carStudents/' + data._id
+                        })
+                        obj.del()
+                        layer.close(index)
+                    })
+                } else if ("edit" === obj.event) {
+                    top.layui && top.layui.index.openTabsPage('/carStudent/carStudentStateForm.html?id=' + data._id,
+                        data.name)
+                }
+                // layer.open({
+                //     type: 2,
+                //     title: "编辑学员",
+                //     content: "/carStudent/carStudentStateForm.html?id=" + data._id,
+                //     maxmin: !0,
+                //     area: ["550px", "550px"],
+                //     btn: ["确定", "取消"],
+                //     yes: function (index, layero) {
+                //         var iframe = window["layui-layer-iframe" + index],
+                //             deitEle = layero.find("iframe").contents().find(
+                //                 "#layuiadmin-app-form-edit");
+                //         iframe.layui.form.on("submit(layuiadmin-app-form-edit)",
+                //             function (sonObj) {
+                //                 var field = sonObj.field;
+                //                 admin.req({
+                //                     type: 'put',
+                //                     url: '/api/carStudents/' + data._id,
+                //                     data: field,
+                //                     success: function (res) {
+                //                         obj.update(layui.$.extend({}, field));
+                //                         form.render();
+                //                         layer.close(index)
+                //                     }
+                //                 })
+                //             }), deitEle.trigger("click")
+                //     }
+                // })
+            })
+        table.render({
+            elem: "#LAY-app-content-tags",
+            url: layui.setter.base + "json/content/tags.js",
+            cols: [
+                [{
+                        type: "numbers",
+                        fixed: "left"
+                    },
+                    {
+                        field: "id",
+                        width: 100,
+                        title: "ID",
+                        sort: !0
+                    },
+                    {
+                        field: "tags",
+                        title: "分类名",
+                        minWidth: 100
+                    },
+                    {
+                        title: "操作",
+                        width: 150,
+                        align: "center",
+                        fixed: "right",
+                        toolbar: "#layuiadmin-app-cont-tagsbar"
+                    }
+                ]
+            ],
+            text: "对不起，加载出现异常！"
+        })
+
+    });
+</script>
+{% endblock %}

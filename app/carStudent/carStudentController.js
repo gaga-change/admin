@@ -9,6 +9,10 @@ module.exports = router => {
     router.get('/carStudent/carStudentList.html', async ctx => {
         await ctx.render('carStudent/carStudentList', ctx.state)
     })
+    // 列表 - 页面
+    router.get('/carStudent/carStudentStateList.html', async ctx => {
+        await ctx.render('carStudent/carStudentStateList', ctx.state)
+    })
     // 表单 - 页面
     router.get('/carStudent/carStudentForm.html', async ctx => {
         let id = ctx.query.id
@@ -20,6 +24,18 @@ module.exports = router => {
             ctx.state.carStudent = {}
         }
         await ctx.render('carStudent/carStudentForm', ctx.state)
+    })
+    // 表单 - 页面
+    router.get('/carStudent/carStudentStateForm.html', async ctx => {
+        let id = ctx.query.id
+        if (id) {
+            ctx.state.carStudent = await carStudentService.list(ctx, {
+                _id: id
+            })
+        } else {
+            ctx.state.carStudent = {}
+        }
+        await ctx.render('carStudent/carStudentStateForm', ctx.state)
     })
     baseController(router, carStudentService, 'carStudents')
 }
