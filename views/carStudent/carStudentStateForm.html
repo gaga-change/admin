@@ -64,24 +64,178 @@
         </div>
     </div> -->
     <div class="layui-form-item">
-        <div class="layui-input-block">
-            <button class="layui-btn" lay-submit="" lay-filter="submit">保存编辑</button>
-            <button type="reset" class="layui-btn layui-btn-primary" id="rest">重置</button>
+        <div class="layui-block">
+            <label class="layui-form-label">考试记录</label>
+            <div class="layui-input-block">
+                <table class="layui-hide" id="subjectHistoryTable" lay-filter="subjectHistoryTable"></table>
+            </div>
         </div>
     </div>
+    <div class="layui-form-item" id="appendSubject" style="display:none">
+        <div class="layui-block">
+            <label class="layui-form-label"></label>
+            <div class="layui-input-inline">
+                <input type="text" name="" id="newSubject" value="" lay-verify="" placeholder="考试类型" minlength="1"
+                    maxlength="10" autocomplete="off" class="layui-input" readonly>
+            </div>
+            <div class="layui-input-inline">
+                <input type="text" name="" id="newExamDate" value="" lay-verify="date" placeholder="" autocomplete="off"
+                    class="layui-input">
+            </div>
+            <div class="layui-input-inline">
+                <input type="checkbox" lay-verify="" id="newState" lay-filter="newState" name="" lay-skin="switch"
+                    lay-text="已通过|未通过">
+            </div>
+        </div>
+        <div class="layui-form-mid ">
+            <!-- <a href="JavaScript:void(0)" >添加记录</a> -->
+            <button type="button" class="layui-btn layui-btn-sm" id="addNewSubjectHistory">
+                <i class="layui-icon">&#xe654;</i>
+            </button>
+        </div>
+    </div>
+    </div>
+    <div class="layui-form-item">
+        <div class="layui-input-block">
+            <button class="layui-btn" lay-submit="" lay-filter="submit">保存</button>
+            <button type="button" class="layui-btn layui-btn-primary" id="rest">重置</button>
+        </div>
+    </div>
+    <script type="text/html" id="newStateTemplet">
+        {% raw %}
+  {{#  if(d.state){ }}
+    <button class="layui-btn layui-btn-xs">已通过 </button>
+  {{#  } else { }}
+    <button class="layui-btn layui-btn-primary layui-btn-xs">未通过</button>
+  {{#  } }}
+  {% endraw %}
+</script>
+    <script type="text/html" id="newExamDateTemplet">
+        {% raw %}
+    <input type="text" name=""  value="{{d.examDate}}" data-index="{{d.LAY_INDEX}}" lay-verify="date" placeholder=""
+    autocomplete="off" class="layui-input input_date" style="height: 28px;">
+{% endraw %}
+</script>
+    <script type="text/html" id="barDemo">
+        <button type class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</button>
+  </script>
 </form>
 {% endblock %}
 {% block script %}
 <script>
+    $('#rest').click(function () {
+        location.href = ''
+    })
     layui.config({
         base: '/' //静态资源所在路径
     }).extend({
         index: 'js/lib/index' //主入口模块
-    }).use(['index', 'form'], function () {
+    }).use(['index', 'form', 'laydate', 'table', 'util'], function () {
+        var SUBJECT_TYPE = ['科目一', '科目二', '科目三路考', '科目三理论']
+        var subjectTypeIndex = 0
         var $ = layui.$
         var admin = layui.admin
         var form = layui.form
         var layer = layui.layer
+        var laydate = layui.laydate
+        var table = layui.table
+        var util = layui.util
+        var subjectHistory = []
+        var lastSubjectHistory = null
+        /**
+         * 添加记录 往表格中添加记录
+         * 
+         */
+        var subjectHistoryTable = table.render({
+            elem: '#subjectHistoryTable',
+            data: [],
+            cellMinWidth: 80, //全局定义常规单元格的最小宽度，layui 2.2.1 新增
+            cols: [
+                [{
+                        field: 'subject',
+                        title: '科目'
+                    },
+                    {
+                        field: 'state',
+                        title: '状态',
+                        templet: '#newStateTemplet'
+                    },
+                    {
+                        field: 'examDate',
+                        title: '时间',
+                        templet: '#newExamDateTemplet'
+                    },
+                    {
+                        fixed: 'right',
+                        title: '操作',
+                        toolbar: '#barDemo',
+                        width: 150
+                    }
+
+                ]
+            ]
+        })
+        //监听行工具事件
+        table.on('tool(subjectHistoryTable)', function (obj) {
+            var data = obj.data;
+            var delIndex = 0
+            subjectHistory.forEach(function (item, i) {
+                if (item.id === data.id) {
+                    delIndex = i
+                }
+            })
+            if (obj.event === 'del') {
+                layer.confirm('真的删除行么', function (index) {
+                    obj.del()
+                    layer.close(index)
+                    subjectHistory.splice(index, 1)
+                    console.log(subjectHistory)
+                })
+            }
+        })
+        $('#appendSubject').show()
+        // 初始 考试类型
+        $('#newSubject').val(SUBJECT_TYPE[subjectTypeIndex])
+        $('#newExamDate').val(util.toDateString(new Date(), 'yyyy-MM-dd'))
+        laydate.render({
+            elem: '#newExamDate'
+        })
+        var newState = false
+        form.on('switch(newState)', function (data) {
+            newState = data.elem.checked
+        });
+        $('#addNewSubjectHistory').click(function () {
+            var obj = {
+                subject: $('#newSubject').val(),
+                examDate: $('#newExamDate').val(),
+                state: newState,
+                last: false,
+                id: Date.now() + '' + Math.random()
+            }
+            // 科目四 且 通过
+            if (obj.state && subjectTypeIndex == 3) {
+                $('#appendSubject').hide()
+            } else if (obj.state) {
+                subjectTypeIndex++
+                $('#newSubject').val(SUBJECT_TYPE[subjectTypeIndex])
+            }
+            lastSubjectHistory.last = false,
+            lastSubjectHistory = obj
+            lastSubjectHistory.last = true
+            subjectHistory.push(obj)
+            subjectHistoryTable.reload({
+                data: subjectHistory
+            })
+            $('.input_date').each(function (index, ele) {
+                laydate.render({
+                    elem: ele,
+                    done: function (value, date) { //监听日期被切换
+                        console.log(value)
+                        subjectHistory[index].examDate = value
+                    }
+                })
+            })
+        })
 
         /* 监听提交 */
         form.on('submit(submit)', function (data) {
