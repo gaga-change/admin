@@ -119,6 +119,15 @@ const state = {
         default: null,
         type: Boolean
     },
+    // 科目四考试次数
+    subjectFourNum:  {
+        default: 1,
+        type: Number
+    },
+    subjectFour: {
+        default: null,
+        type: Boolean
+    },
     subjectHistory: [
         {
             // 考试日期
