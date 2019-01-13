@@ -52,7 +52,7 @@ module.exports = router => {
     router.post('/api/carStudents/costs',tools.checkAuth2, async ctx => {
         let {body} = ctx.request
         ctx.assert(body.name && body.card && body.cost, code.BadRequest, '参数异常')
-        return ctx.body = await carStudentService.addCost(ctx, body)
+        ctx.body = await carStudentService.addCost(ctx, body)
     })
     // 删除缴费
     router.delete('/api/carStudents/:carStudentId/costs/:costId', async ctx => {
@@ -63,8 +63,8 @@ module.exports = router => {
 
     })
     // 查询缴费
-    router.get('/api/carStudents/:carStudentId/costs', async ctx => {
-
+    router.get('/api/carStudents/costs', async ctx => {
+        ctx.body = await carStudentService.findCost(ctx, ctx.query)
     })
     baseController(router, carStudentService, 'carStudents')
 }

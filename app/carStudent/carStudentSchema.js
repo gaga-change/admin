@@ -147,6 +147,7 @@ const state = {
     }]
 }
 
+// 缴费记录
 const costList = {
     costList: [{
         _id: Schema.Types.ObjectId,
