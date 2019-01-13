@@ -87,20 +87,6 @@
                 },
                 add: function () {
                     top.layui && top.layui.index.openTabsPage('/carStudent/carStudentCostForm.html', '新增缴费')
-                    // layer.open({
-                    //     type: 2,
-                    //     title: '学员录入',
-                    //     content: '/carStudent/carStudentForm.html',
-                    //     maxmin: true,
-                    //     area: ['550px', '550px'],
-                    //     btn: ['确定', '取消'],
-                    //     yes: function (index, layero) {
-                    //         //点击确认触发 iframe 内容中的按钮提交
-                    //         var submit = layero.find('iframe').contents().find(
-                    //             "#layuiadmin-app-form-submit");
-                    //         submit.click();
-                    //     }
-                    // });
                 }
             };
 
@@ -114,8 +100,7 @@
             url: "/api/carStudents/costs",
             parseData: function (res) { //res 即为原始返回的数据
                 res.data.forEach(function (item) {
-                    item.createdAt = layui.util.timeAgo(item.createdAt, true)
-                    item.registerDate = layui.util.toDateString(item.registerDate,
+                    item.payDate = layui.util.toDateString(item.payDate,
                         'yyyy-MM-dd')
                 })
                 return {
@@ -135,7 +120,7 @@
                     },
                     {
                         field: "carStudentName",
-                        title: "学员姓名",
+                        title: "记录姓名",
                     },
                     {
                         field: "carStudentCard",
@@ -154,6 +139,10 @@
                         title: "缴费状态",
                         templet: "#buttonTpl"
                     }, 
+                    {
+                        field: "payDate",
+                        title: "缴费日期",
+                    },
                     {
                         field: "remark",
                         width: 120,
@@ -179,7 +168,7 @@
             function (obj) {
                 var data = obj.data;
                 if ("del" === obj.event) {
-                    layer.confirm("确定删除此学员？", function (index) {
+                    layer.confirm("确定删除此记录？", function (index) {
                         admin.req({
                             type: 'delete',
                             url: '/api/carStudents/' + data._id
@@ -188,12 +177,8 @@
                         layer.close(index)
                     })
                 } else if ("edit" === obj.event) {
-                    top.layui && top.layui.index.openTabsPage('/carStudent/carStudentForm.html?id=' + data._id,
-                        data.name)
-                } else if ("cost" === obj.event) {
-                    top.layui && top.layui.index.openTabsPage('/carStudent/carStudentCostForm.html?name=' +
-                        data.name + '&card=' + data.card,
-                        data.name + '-缴费')
+                    top.layui && top.layui.index.openTabsPage('/carStudent/carStudentCostForm.html?id=' + data._id + '&carStudentId=' + data.carStudentId,
+                        data.carStudentName + '-缴费记录')
                 }
             })
     });

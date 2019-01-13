@@ -32,7 +32,7 @@
 
                 <select name="cost" lay-verify="required" lay-filter="cost" id="cost">
                     <option value=""></option>
-                    {% if carStudent.cost %}<option value="{{carStudent.cost}}" selected>{{carStudent.cost}}</option>
+                    {% if carStudent.costList.name %}<option value="{{carStudent.costList.name}}" selected>{{carStudent.costList.name}}</option>
                     {% endif %}
                 </select>
             </div>
@@ -40,7 +40,7 @@
         <div class="layui-inline">
             <label class="layui-form-label required">价格</label>
             <div class="layui-input-inline">
-                <input class="layui-input" type="number" lay-verify="number" name="price" value="{{carStudent.price}}"
+                <input class="layui-input" type="number" lay-verify="number" name="price" value="{{carStudent.costList.price}}"
                     min="0" max="999999" id="price">
             </div>
         </div>
@@ -50,13 +50,13 @@
             <label class="layui-form-label">缴费状态</label>
             <div class="layui-input-inline">
                 <input type="checkbox" lay-verify="required" lay-filter="state" name="state" lay-skin="switch" lay-text="已缴费|未缴费"
-                    value="on" {% if carStudent.healthExamination %} checked="checked" {% endif %}> </div>
+                    value="on" {% if carStudent.costList.state %} checked="checked" {% endif %}> </div>
         </div>
     </div>
-    <div class="layui-form-item" id="payDateArea" style="display:none">
+    <div class="layui-form-item" id="payDateArea"   {% if !carStudent.costList.state %} style="display:none" {% endif %}>
         <label class="layui-form-label required">缴费日期</label>
         <div class="layui-input-block">
-            <input type="text" name="payDate" id="payDate" value="{{carStudent.payDate && carStudent.payDate | date('Y-m-d')}}"
+            <input type="text" name="payDate" id="payDate" value="{{carStudent.costList.payDate && carStudent.costList.payDate | date('Y-m-d')}}"
                 lay-verify="date" placeholder="" s autocomplete="off" class="layui-input" lay-filter="payDate">
         </div>
     </div>

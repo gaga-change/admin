@@ -39,9 +39,20 @@ module.exports = router => {
     })
     // 缴费 编辑&添加 - 页面
     router.get('/carStudent/carStudentCostForm.html', async ctx => {
-        ctx.state.carStudent = {
-            ...ctx.query
+        let id = ctx.query.id
+        let carStudentId = ctx.query.carStudentId
+        if (id) {
+            ctx.state.carStudent = await carStudentService.findCostOne(ctx, {
+                id,
+                carStudentId
+            })
+        } else {
+            ctx.state.carStudent = {
+                ...ctx.query,
+                costList: {}
+            }
         }
+        console.log(ctx.state.carStudent)
         await ctx.render('carStudent/carStudentCostForm', ctx.state)
     })
     // 缴费 列表 - 页面
@@ -53,8 +64,10 @@ module.exports = router => {
     //     let {body} = ctx.request
     //     return await carStudentService.addCost(ctx, body)
     // })
-    router.post('/api/carStudents/costs',tools.checkAuth2, async ctx => {
-        let {body} = ctx.request
+    router.post('/api/carStudents/costs', tools.checkAuth2, async ctx => {
+        let {
+            body
+        } = ctx.request
         ctx.assert(body.name && body.card && body.cost, code.BadRequest, '参数异常')
         ctx.body = await carStudentService.addCost(ctx, body)
     })

@@ -50,7 +50,7 @@ module.exports = {
 
         let criteria = {
             admin: new mongoose.
-                    Types.ObjectId(ctx.state.admin._id)
+            Types.ObjectId(ctx.state.admin._id)
         }
         if (object.carStudentName) criteria['name'] = object.carStudentName
 
@@ -64,7 +64,8 @@ module.exports = {
                 payDate: '$costList.payDate',
                 remark: '$costList.remark',
                 carStudentName: '$name',
-                carStudentCard: '$card'
+                carStudentCard: '$card',
+                carStudentId: '$_id'
             }).limit(page.pageSize)
             .skip((page.page - 1) * page.pageSize),
             this.DB.aggregate([{
@@ -73,7 +74,8 @@ module.exports = {
                 $unwind: '$costList'
             }, {
                 $count: "count"
-            }])])
+            }])
+        ])
         return {
             data: res[0],
             page: {
@@ -82,5 +84,27 @@ module.exports = {
                 pageSize: page.pageSize
             }
         }
+    },
+    /** 查询单条记录 */
+    async findCostOne(ctx, object) {
+        const res = await this.DB.aggregate([
+            {
+                $match: {
+                    admin: new mongoose.
+                    Types.ObjectId(ctx.state.admin._id),
+                    _id: new mongoose.
+                    Types.ObjectId(object.carStudentId)
+                }
+            }, {
+                $unwind: '$costList'
+            }, {
+                $match: {
+                    'costList._id': new mongoose.
+                    Types.ObjectId(object.id)
+                }
+            }
+
+        ])
+        return res[0] || null
     }
 }
