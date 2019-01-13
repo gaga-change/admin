@@ -39,13 +39,8 @@ module.exports = router => {
     })
     // 缴费 - 页面
     router.get('/carStudent/carStudentCostForm.html', async ctx => {
-        let id = ctx.query.id
-        if (id) {
-            ctx.state.carStudent = await carStudentService.list(ctx, {
-                _id: id
-            })
-        } else {
-            ctx.state.carStudent = {}
+        ctx.state.carStudent = {
+            ...ctx.query
         }
         await ctx.render('carStudent/carStudentCostForm', ctx.state)
     })

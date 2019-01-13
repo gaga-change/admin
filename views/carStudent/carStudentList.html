@@ -35,7 +35,9 @@
         </script>
             <script type="text/html" id="table-content-list">
                 <a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="edit"><i class="layui-icon layui-icon-edit"></i>查看</a>
-          <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del"><i class="layui-icon layui-icon-delete"></i>删除</a>
+                <a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="cost"><i class="layui-icon layui-icon-rmb
+                    "></i>缴费</a>
+                <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del"><i class="layui-icon layui-icon-delete"></i>删除</a>
         </script>
         </div>
     </div>
@@ -115,7 +117,8 @@
             parseData: function (res) { //res 即为原始返回的数据
                 res.data.forEach(function (item) {
                     item.createdAt = layui.util.timeAgo(item.createdAt, true)
-                    item.registerDate = layui.util.toDateString(item.registerDate, 'yyyy-MM-dd')
+                    item.registerDate = layui.util.toDateString(item.registerDate,
+                        'yyyy-MM-dd')
                 })
                 return {
                     "code": 0, //解析接口状态
@@ -159,7 +162,7 @@
                     },
                     {
                         title: "操作",
-                        minWidth: 150,
+                        minWidth: 220,
                         align: "center",
                         fixed: "right",
                         toolbar: "#table-content-list"
@@ -188,66 +191,12 @@
                 } else if ("edit" === obj.event) {
                     top.layui && top.layui.index.openTabsPage('/carStudent/carStudentForm.html?id=' + data._id,
                         data.name)
+                } else if ("cost" === obj.event) {
+                    top.layui && top.layui.index.openTabsPage('/carStudent/carStudentCostForm.html?name=' +
+                        data.name + '&card=' + data.card,
+                        data.name + '-缴费')
                 }
-                // layer.open({
-                //     type: 2,
-                //     title: "编辑学员",
-                //     content: "/carStudent/carStudentForm.html?id=" + data._id,
-                //     maxmin: !0,
-                //     area: ["550px", "550px"],
-                //     btn: ["确定", "取消"],
-                //     yes: function (index, layero) {
-                //         var iframe = window["layui-layer-iframe" + index],
-                //             deitEle = layero.find("iframe").contents().find(
-                //                 "#layuiadmin-app-form-edit");
-                //         iframe.layui.form.on("submit(layuiadmin-app-form-edit)",
-                //             function (sonObj) {
-                //                 var field = sonObj.field;
-                //                 admin.req({
-                //                     type: 'put',
-                //                     url: '/api/carStudents/' + data._id,
-                //                     data: field,
-                //                     success: function (res) {
-                //                         obj.update(layui.$.extend({}, field));
-                //                         form.render();
-                //                         layer.close(index)
-                //                     }
-                //                 })
-                //             }), deitEle.trigger("click")
-                //     }
-                // })
             })
-        table.render({
-            elem: "#LAY-app-content-tags",
-            url: layui.setter.base + "json/content/tags.js",
-            cols: [
-                [{
-                        type: "numbers",
-                        fixed: "left"
-                    },
-                    {
-                        field: "id",
-                        width: 100,
-                        title: "ID",
-                        sort: !0
-                    },
-                    {
-                        field: "tags",
-                        title: "分类名",
-                        minWidth: 100
-                    },
-                    {
-                        title: "操作",
-                        width: 150,
-                        align: "center",
-                        fixed: "right",
-                        toolbar: "#layuiadmin-app-cont-tagsbar"
-                    }
-                ]
-            ],
-            text: "对不起，加载出现异常！"
-        })
-
     });
 </script>
 {% endblock %}
