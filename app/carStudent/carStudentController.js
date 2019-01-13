@@ -74,7 +74,7 @@ module.exports = router => {
     })
     // 删除缴费
     router.delete('/api/carStudents/:carStudentId/costs/:costId', async ctx => {
-
+        ctx.body = await carStudentService.delCost(ctx)
     })
     // 修改缴费
     router.put('/api/carStudents/:carStudentId/costs/:costId', async ctx => {

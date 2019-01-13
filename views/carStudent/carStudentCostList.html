@@ -71,19 +71,28 @@
                         return layer.msg('请选择数据');
                     }
                     layer.confirm('确定删除吗？', function (index) {
+                        layer.close(index)
                         var ids = []
-                        checkData.forEach(function (item) {
-                            ids.push(item._id)
-                        })
-                        admin.req({
-                            type: 'DELETE',
-                            url: '/api/carStudents?ids=' + ids.join(','),
-                            success: function (res) {
+                        var loadIndex = layer.load(3)
+                        function del() {
+                            var item = checkData.shift()
+                            if (item) {
+                                admin.req({
+                                    type: 'delete',
+                                    url: '/api/carStudents/' + item.carStudentId +
+                                        '/costs/' + item._id,
+                                    success: function (res) {
+                                        del()
+                                    }
+                                })
+                            } else {
                                 table.reload('LAY-app-content-list');
-                                layer.msg('已删除');
+                                layer.close(loadIndex)
+                                layer.msg('已删除')
                             }
-                        })
-                    });
+                        }
+                        del()
+                    })
                 },
                 add: function () {
                     top.layui && top.layui.index.openTabsPage('/carStudent/carStudentCostForm.html', '新增缴费')
@@ -125,20 +134,20 @@
                     {
                         field: "carStudentCard",
                         title: "证件号",
-                    }, 
+                    },
                     {
                         field: "name",
                         title: "费用名称",
-                    }, 
+                    },
                     {
                         field: "price",
                         title: "费用价格",
-                    }, 
+                    },
                     {
                         field: "state",
                         title: "缴费状态",
                         templet: "#buttonTpl"
-                    }, 
+                    },
                     {
                         field: "payDate",
                         title: "缴费日期",
@@ -171,13 +180,15 @@
                     layer.confirm("确定删除此记录？", function (index) {
                         admin.req({
                             type: 'delete',
-                            url: '/api/carStudents/' + data._id
+                            url: '/api/carStudents/' + data.carStudentId + '/costs/' + data
+                                ._id
                         })
                         obj.del()
                         layer.close(index)
                     })
                 } else if ("edit" === obj.event) {
-                    top.layui && top.layui.index.openTabsPage('/carStudent/carStudentCostForm.html?id=' + data._id + '&carStudentId=' + data.carStudentId,
+                    top.layui && top.layui.index.openTabsPage('/carStudent/carStudentCostForm.html?id=' +
+                        data._id + '&carStudentId=' + data.carStudentId,
                         data.carStudentName + '-缴费记录')
                 }
             })

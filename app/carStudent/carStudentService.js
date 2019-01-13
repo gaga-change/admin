@@ -123,5 +123,19 @@ module.exports = {
             'admin': ctx.state.admin,
             'costList._id': costId
         }, update)
-    }
+    },
+    /** 删除缴费 */
+    async delCost(ctx) {
+        const {
+            carStudentId,
+            costId
+        } = ctx.params
+
+        return await this.DB.updateOne({
+            '_id': carStudentId,
+            'admin': ctx.state.admin
+        }, {
+            $pull: {costList: {_id: costId}}
+        })
+    },
 }
