@@ -36,19 +36,35 @@
             <script type="text/html" id="passSubjectsTemplet">
                 {% raw %}
           {{#  if(d.subjectOne){ }}
-          <button class="layui-btn layui-btn-primary layui-btn-xs">科目一</button>
+          <button class="layui-btn layui-btn-xs">科目一</button>
           {{#  } }}
           {{#  if(d.subjectTwo){ }}
-          <button class="layui-btn layui-btn-primary layui-btn-xs">科目二</button>
+          <button class="layui-btn layui-btn-xs">科目二</button>
           {{#  } }}
           {{#  if(d.subjectThree){ }}
-          <button class="layui-btn layui-btn-primary layui-btn-xs">科目三道路驾驶</button>
+          <button class="layui-btn layui-btn-xs">科目三路考</button>
           {{#  } }}
           {{#  if(d.subjectFour){ }}
-          <button class="layui-btn layui-btn-primary layui-btn-xs">科目</button>
+          <button class="layui-btn layui-btn-xs">科目三理论</button>
           {{#  } }}
           {% endraw %}
         </script>
+            <script type="text/html" id="nopassSubjectsTemplet">
+                {% raw %}
+      {{#  if(!d.subjectOne){ }}
+      <button class="layui-btn layui-btn-primary layui-btn-xs">科目一</button>
+      {{#  } }}
+      {{#  if(!d.subjectTwo){ }}
+      <button class="layui-btn layui-btn-primary layui-btn-xs">科目二</button>
+      {{#  } }}
+      {{#  if(!d.subjectThree){ }}
+      <button class="layui-btn layui-btn-primary layui-btn-xs">科目三路考</button>
+      {{#  } }}
+      {{#  if(!d.subjectFour){ }}
+      <button class="layui-btn layui-btn-primary layui-btn-xs">科目三理论</button>
+      {{#  } }}
+      {% endraw %}
+    </script>
             <script type="text/html" id="table-content-list">
                 <a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="edit"><i class="layui-icon layui-icon-edit"></i>编辑</a>
         </script>
@@ -99,16 +115,12 @@
             },
             cols: [
                 [{
-                        type: "checkbox",
-                        fixed: "left"
-                    },
-                    {
                         field: "name",
                         title: "姓名",
                     },
                     {
                         field: "card",
-                        title: "证件号",
+                        title: "证件号"
                     },
                     {
                         field: "healthExamination",
@@ -117,7 +129,13 @@
                     },
                     {
                         title: "已通过科目",
+                        minWidth: 320,
                         templet: "#passSubjectsTemplet"
+                    },
+                    {
+                        title: '未通过科目',
+                        minWidth: 320,
+                        templet: '#nopassSubjectsTemplet'
                     },
                     {
                         title: "操作",

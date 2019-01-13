@@ -93,7 +93,7 @@ const state = {
     // 数量默认为1。 
     // 科目一考试次数 （默认1次）
     subjectOneNum: {
-        default: 1,
+        default: 0,
         type: Number
     },
     // 科目一考试状态 （false: 为通过 true: 通过）
@@ -103,7 +103,7 @@ const state = {
     },
     // 科目二考试次数
     subjectTwoNum:  {
-        default: 1,
+        default: 0,
         type: Number
     },
     subjectTwo: {
@@ -112,7 +112,7 @@ const state = {
     },
     // 科目三考试次数
     subjectThreeNum:  {
-        default: 1,
+        default: 0,
         type: Number
     },
     subjectThree: {
@@ -121,7 +121,7 @@ const state = {
     },
     // 科目四考试次数
     subjectFourNum:  {
-        default: 1,
+        default: 0,
         type: Number
     },
     subjectFour: {

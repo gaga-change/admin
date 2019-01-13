@@ -98,15 +98,15 @@
     <div class="layui-form-item">
         <div class="layui-input-block">
             <button class="layui-btn" lay-submit="" lay-filter="submit">保存</button>
-            <button type="button" class="layui-btn layui-btn-primary" id="rest">重置</button>
+            <!-- <button type="button" class="layui-btn layui-btn-primary" id="rest">重置</button> -->
         </div>
     </div>
     <script type="text/html" id="newStateTemplet">
         {% raw %}
   {{#  if(d.state){ }}
-    <button class="layui-btn layui-btn-xs">已通过 </button>
+    <button type="button" class="layui-btn layui-btn-xs">已通过 </button>
   {{#  } else { }}
-    <button class="layui-btn layui-btn-primary layui-btn-xs">未通过</button>
+    <button type="button" class="layui-btn layui-btn-primary layui-btn-xs">未通过</button>
   {{#  } }}
   {% endraw %}
 </script>
@@ -117,7 +117,11 @@
 {% endraw %}
 </script>
     <script type="text/html" id="barDemo">
-        <button type class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</button>
+        {% raw %}
+        {{# if (d.last) { }}
+        <button type="button" class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</button>
+        {{# } }}
+        {% endraw %}
   </script>
 </form>
 {% endblock %}
@@ -131,8 +135,7 @@
     }).extend({
         index: 'js/lib/index' //主入口模块
     }).use(['index', 'form', 'laydate', 'table', 'util'], function () {
-        var SUBJECT_TYPE = ['科目一', '科目二', '科目三路考', '科目三理论']
-        var subjectTypeIndex = 0
+
         var $ = layui.$
         var admin = layui.admin
         var form = layui.form
@@ -141,7 +144,18 @@
         var table = layui.table
         var util = layui.util
         var subjectHistory = []
+
+
+        var SUBJECT_TYPE = ['科目一', '科目二', '科目三路考', '科目三理论']
+        var SUBJECT_KEY = {
+            '科目一': 1,
+            '科目二': 2,
+            '科目三路考': 3,
+            '科目三理论': 4
+        }
         var lastSubjectHistory = null
+        var carStudentId = $('#carStudentId').val()
+
         /**
          * 添加记录 往表格中添加记录
          * 
@@ -152,7 +166,7 @@
             cellMinWidth: 80, //全局定义常规单元格的最小宽度，layui 2.2.1 新增
             cols: [
                 [{
-                        field: 'subject',
+                        field: 'subjectName',
                         title: '科目'
                     },
                     {
@@ -175,6 +189,24 @@
                 ]
             ]
         })
+        if (carStudentId) {
+            $.get('/api/carStudents/' + carStudentId).then(function (res) {
+                subjectHistory = res.subjectHistory
+                subjectHistory.forEach(function (item, index) {
+                    item.id = Date.now() + '' + Math.random()
+                    item.last = index === (subjectHistory.length - 1)
+                    item.subjectName = SUBJECT_TYPE[item.subject - 1]
+                    item.examDate = util.toDateString(new Date(item.examDate), 'yyyy-MM-dd')
+                })
+                lastSubjectHistory = subjectHistory[subjectHistory.length - 1]
+                subjectHistoryTable.reload({
+                    data: subjectHistory
+                })
+
+                reloadExamDate()
+                rendLoadAppendArea()
+            })
+        }
         //监听行工具事件
         table.on('tool(subjectHistoryTable)', function (obj) {
             var data = obj.data;
@@ -188,14 +220,19 @@
                 layer.confirm('真的删除行么', function (index) {
                     obj.del()
                     layer.close(index)
-                    subjectHistory.splice(index, 1)
-                    console.log(subjectHistory)
+                    subjectHistory.splice(delIndex, 1)
+                    lastSubjectHistory = subjectHistory[subjectHistory.length - 1]
+                    lastSubjectHistory && (lastSubjectHistory.last = true)
+                    subjectHistoryTable.reload({
+                        data: subjectHistory
+                    })
+                    rendLoadAppendArea()
+                    reloadExamDate()
                 })
             }
         })
-        $('#appendSubject').show()
         // 初始 考试类型
-        $('#newSubject').val(SUBJECT_TYPE[subjectTypeIndex])
+        // rendLoadAppendArea()
         $('#newExamDate').val(util.toDateString(new Date(), 'yyyy-MM-dd'))
         laydate.render({
             elem: '#newExamDate'
@@ -206,41 +243,95 @@
         });
         $('#addNewSubjectHistory').click(function () {
             var obj = {
-                subject: $('#newSubject').val(),
+                subjectName: $('#newSubject').val(),
+                subject: SUBJECT_KEY[$('#newSubject').val()],
                 examDate: $('#newExamDate').val(),
                 state: newState,
                 last: false,
                 id: Date.now() + '' + Math.random()
             }
-            // 科目四 且 通过
-            if (obj.state && subjectTypeIndex == 3) {
-                $('#appendSubject').hide()
-            } else if (obj.state) {
-                subjectTypeIndex++
-                $('#newSubject').val(SUBJECT_TYPE[subjectTypeIndex])
-            }
-            lastSubjectHistory.last = false,
+            lastSubjectHistory && (lastSubjectHistory.last = false)
             lastSubjectHistory = obj
             lastSubjectHistory.last = true
             subjectHistory.push(obj)
             subjectHistoryTable.reload({
                 data: subjectHistory
             })
+            rendLoadAppendArea()
+            reloadExamDate()
+        })
+        // 自动填充下次 考试
+        function rendLoadAppendArea() {
+            var subjectTypeIndex = lastSubjectHistory ? lastSubjectHistory.subject : 1
+            // 科目四 且 通过
+            if (lastSubjectHistory && lastSubjectHistory.state && subjectTypeIndex == 4) {
+                $('#appendSubject').hide()
+            } else if (lastSubjectHistory && lastSubjectHistory.state) {
+                $('#appendSubject').show()
+                $('#newSubject').val(SUBJECT_TYPE[subjectTypeIndex])
+            } else {
+                $('#appendSubject').show()
+                $('#newSubject').val(SUBJECT_TYPE[subjectTypeIndex - 1])
+            }
+        }
+
+        function reloadExamDate() {
             $('.input_date').each(function (index, ele) {
                 laydate.render({
                     elem: ele,
                     done: function (value, date) { //监听日期被切换
-                        console.log(value)
                         subjectHistory[index].examDate = value
                     }
                 })
             })
-        })
+        }
 
         /* 监听提交 */
         form.on('submit(submit)', function (data) {
             var field = data.field
             field.healthExamination = !!field.healthExamination
+            var history = []
+            var stateTotal = {
+                '1': {
+                    arr: [],
+                    state: false
+                },
+                '2': {
+                    arr: [],
+                    state: false
+                },
+                '3': {
+                    arr: [],
+                    state: false
+                },
+                '4': {
+                    arr: [],
+                    state: false
+                }
+            }
+            subjectHistory.forEach(function (item) {
+                history.push({
+                    examDate: item.examDate,
+                    state: item.state,
+                    subject: item.subject
+                })
+                stateTotal[item.subject + ''].arr.push(item)
+                if (item.state) {
+                    stateTotal[item.subject + ''].state = true
+                }
+            })
+            // 考试历史记录
+            field.subjectHistory = history
+            // 统计考试次数以及是否通过
+            var params = ['One', 'Two', 'Three', 'Four']
+            params.forEach(function (key, index) {
+                var num = stateTotal[index + 1 + ''].arr.length
+                if (num) {
+                    field['subject' + key + 'Num'] = num
+                    field['subject' + key] = stateTotal[index + 1 + ''].state
+                }
+            })
+            console.log(field)
             var carStudentId = $('#carStudentId').val()
             if (carStudentId) {
                 admin.req({
