@@ -102,7 +102,7 @@ const state = {
         type: Boolean
     },
     // 科目二考试次数
-    subjectTwoNum:  {
+    subjectTwoNum: {
         default: 0,
         type: Number
     },
@@ -111,7 +111,7 @@ const state = {
         type: Boolean
     },
     // 科目三考试次数
-    subjectThreeNum:  {
+    subjectThreeNum: {
         default: 0,
         type: Number
     },
@@ -120,7 +120,7 @@ const state = {
         type: Boolean
     },
     // 科目四考试次数
-    subjectFourNum:  {
+    subjectFourNum: {
         default: 0,
         type: Number
     },
@@ -128,31 +128,55 @@ const state = {
         default: null,
         type: Boolean
     },
-    subjectHistory: [
-        {
-            // 考试日期
-            examDate: {
-                default: null,
-                type: Date,
-            },
-            // 是否通过。（false 为未通过， true 为通过）
-            state : {
-                default: null,
-                type: Boolean
-            },
-            // 考试科目 （1、 2、 3、 4）
-            subject: {
-                default: null,
-                type: Number
-            },
+    subjectHistory: [{
+        // 考试日期
+        examDate: {
+            default: null,
+            type: Date,
+        },
+        // 是否通过。（false 为未通过， true 为通过）
+        state: {
+            default: null,
+            type: Boolean
+        },
+        // 考试科目 （1、 2、 3、 4）
+        subject: {
+            default: null,
+            type: Number
+        },
+    }]
+}
+
+const costList = {
+    costList: [{
+        _id: Schema.Types.ObjectId,
+        // 缴费名称
+        name: {
+            default: '',
+            type: String
+        },
+        // 缴费价格
+        price: {
+            default: '',
+            type: String
+        },
+        // 是否已缴费。 false 是已缴费。 true 为未缴费
+        state: {
+            default: false,
+            type: Boolean
+        },
+        // 缴费时间
+        payDate: {
+            type: Date
         }
-    ]
+    }]
 }
 
 const CarStudentSchema = new Schema({
     ...person,
     ...dict,
     ...state,
+    ...costList,
     // 报名日期
     registerDate: {
         default: Date.now(),
