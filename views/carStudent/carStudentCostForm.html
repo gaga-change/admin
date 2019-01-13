@@ -13,99 +13,18 @@
                             <div class="layui-inline">
                                 <label class="layui-form-label required">姓名</label>
                                 <div class="layui-input-inline">
-                                    <input type="text" name="name" value="{{carStudent.name }}" required
-                                        lay-verify="required" placeholder="" minlength="1" maxlength="10" autocomplete="off"
-                                        class="layui-input">
-                                </div>
-                            </div>
-                            <div class="layui-inline">
-                                <label class="layui-form-label required">手机号</label>
-                                <div class="layui-input-inline">
-                                    <input type="text" name="phone" value="{{carStudent.phone }}"
-                                        required lay-verify="phone" placeholder="" autocomplete="off" class="layui-input">
+                                    <input type="text" name="name" value="{{carStudent.name }}" required lay-verify="required"
+                                        placeholder="" minlength="1" maxlength="10" autocomplete="off" class="layui-input">
                                 </div>
                             </div>
                         </div>
                         <div class="layui-form-item">
-                            <div class="layui-inline">
-                                <label class="layui-form-label">证件类型</label>
-                                <div class="layui-input-inline">
-                                    <select name="cardType">
-                                        {% set cardTypeList = ['身份证', '军官证', '士兵证', '军官退休证', '境外人员身份证', '外交人员身份证',
-                                        '其他'] %}
-                                        {% for carType in cardTypeList %}
-                                        <option value="{{carType}}" {% if carStudent.carType==cardType %} checked="checked"
-                                            {% endif %}>{{carType}}</option>
-                                        {% endfor %}
-                                    </select>
-                                </div>
-                            </div>
                             <div class="layui-inline">
                                 <label class="layui-form-label required">证件号码</label>
                                 <div class="layui-input-inline">
-                                    <input type="text" name="card" value="{{ carStudent.card }}"
-                                        lay-verify="identity" placeholder="" autocomplete="off" class="layui-input"
-                                        required>
+                                    <input type="text" name="card" value="{{ carStudent.card }}" lay-verify="identity"
+                                        placeholder="" autocomplete="off" class="layui-input" required>
                                 </div>
-                            </div>
-                        </div>
-                        <div class="layui-form-item">
-                            <label class="layui-form-label required">有效期止</label>
-                            <div class="layui-input-inline">
-                                <input type="text" name="cardExpiryDate" id="cardExpiryDate" value="{{carStudent.cardExpiryDate && carStudent.cardExpiryDate | date('Y-m-d')}}"
-                                     lay-verify="date" placeholder="" required
-                                    autocomplete="off" class="layui-input">
-                            </div>
-                        </div>
-                        <div class="layui-form-item">
-                            <label class="layui-form-label required">出生年月</label>
-                            <div class="layui-input-inline">
-                                <input type="text" name="birthday" id="birthday" required value="{{carStudent.birthday && carStudent.birthday | date('Y-m-d')}}"
-                                     lay-verify="date" placeholder="" autocomplete="off"
-                                    class="layui-input">
-                            </div>
-                        </div>
-                        <div class="layui-form-item">
-                            <div class="layui-inline">
-                                <label class="layui-form-label ">国籍</label>
-                                <div class="layui-input-inline">
-                                    <select name="nationality" lay-verify="">
-                                        {% set nationalityList = ['中国', '其他'] %}
-                                        {% for nationality in nationalityList %}
-                                        <option value="{{nationality}}" {% if carStudent.nationality==nationality %}
-                                            checked="checked" {% endif %}>{{nationality}}</option>
-                                        {% endfor %}
-                                    </select>
-
-                                </div>
-                            </div>
-                            <div class="layui-inline">
-                                <label class="layui-form-label ">户籍</label>
-                                <div class="layui-input-inline">
-                                    <select name="familyRegister" lay-verify="">
-                                        {% set familyRegisterList = ['本地学员', '外地学员'] %}
-                                        {% for familyRegister in familyRegisterList %}
-                                        <option value="{{familyRegister}}" {% if carStudent.familyRegister==familyRegister
-                                            %} checked="checked" {% endif %}>{{familyRegister}}</option>
-                                        {% endfor %}
-                                    </select>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="layui-form-item">
-                            <label class="layui-form-label ">联系地址</label>
-                            <div class="layui-input-block">
-                                <input type="text" name="address" value="{{carStudent.address}}" placeholder=""
-                                    minlength="1" maxlength="10" autocomplete="off" class="layui-input">
-                            </div>
-                        </div>
-                        <div class="layui-form-item">
-                            <label class="layui-form-label">性别</label>
-                            <div class="layui-input-block">
-                                <input type="radio" name="sex" value="男" title="男" {% if carStudent.sex=='男' ||
-                                    !carStudent.sex %} checked="checked" {% endif %}>
-                                <input type="radio" name="sex" value="女" title="女" {% if carStudent.sex=='女' %} checked="checked"
-                                    {% endif %}>
                             </div>
                         </div>
                     </div>
@@ -128,33 +47,11 @@
                     <div class="layui-card-body">
                         <div class="layui-form-item">
                             <div class="layui-inline">
-                                <label class="layui-form-label required">校区</label>
+                                <label class="layui-form-label required">缴费类型</label>
                                 <div class="layui-input-inline">
-                                    <select name="campus" lay-verify="required" id="campus">
+                                    <select name="cost" lay-verify="required" lay-filter="cost" id="cost">
                                         <option value=""></option>
-                                        {% if carStudent.campus %}<option value="{{carStudent.campus}}" selected>{{carStudent.campus}}</option>
-                                        {% endif %}
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="layui-inline">
-                                <label class="layui-form-label ">推荐人</label>
-                                <div class="layui-input-inline">
-                                    <select name="referrer" lay-verify="" id="referrer">
-                                        <option value=""></option>
-                                        {% if carStudent.referrer %}<option value="{{carStudent.referrer}}" selected>{{carStudent.referrer}}</option>
-                                        {% endif %}
-                                    </select>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="layui-form-item">
-                            <div class="layui-inline">
-                                <label class="layui-form-label required">班型</label>
-                                <div class="layui-input-inline">
-                                    <select name="classType" lay-verify="required" lay-filter="classType" id="classType">
-                                        <option value=""></option>
-                                        {% if carStudent.classType %}<option value="{{carStudent.classType}}" selected>{{carStudent.classType}}</option>
+                                        {% if carStudent.cost %}<option value="{{carStudent.cost}}" selected>{{carStudent.cost}}</option>
                                         {% endif %}
                                     </select>
                                 </div>
@@ -162,24 +59,14 @@
                             <div class="layui-inline">
                                 <label class="layui-form-label required">价格</label>
                                 <div class="layui-input-inline">
-                                    <input class="layui-input" type="number" lay-verify="number" name="registerPrice"
-                                        value="{{carStudent.registerPrice}}" min="0" max="999999" id="registerPrice">
+                                    <input class="layui-input" type="number" lay-verify="number" name="price" value="{{carStudent.price}}"
+                                        min="0" max="999999" id="price">
                                 </div>
                             </div>
                         </div>
                         <div class="layui-form-item">
                             <div class="layui-inline">
-                                <label class="layui-form-label">报名点</label>
-                                <div class="layui-input-inline">
-                                    <select name="regPoint" lay-verify="" id="regPoint">
-                                        <option value=""></option>
-                                        {% if carStudent.regPoint %}<option value="{{carStudent.regPoint}}" selected>{{carStudent.regPoint}}</option>
-                                        {% endif %}
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="layui-inline">
-                                <label class="layui-form-label required">报名日期</label>
+                                <label class="layui-form-label required">缴费日期</label>
                                 <div class="layui-input-inline">
                                     <input type="text" name="registerDate" id="registerDate" value="{{carStudent.registerDate && carStudent.registerDate | date('Y-m-d')}}"
                                         id="LAY-component-form-group-date" lay-verify="date" placeholder="" required
@@ -187,60 +74,8 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="layui-form-item">
-                            <label class="layui-form-label">外校转入</label>
-                            <div class="layui-input-inline">
-                                <input type="checkbox" lay-verify="required" lay-filter="otherSchool" name="otherSchool"
-                                    lay-skin="switch" lay-text="是|否" value="true" {% if classType.otherSchool %}
-                                    checked="checked" {% endif %}>
-                            </div>
-                        </div>
-                        <div class="layui-form-item">
-                            <label class="layui-form-label">登记地址</label>
-                            <div class="layui-input-block">
-                                <input type="text" name="registerAddress" value="{{carStudent.registerAddress}}"
-                                    placeholder="" minlength="1" maxlength="10" autocomplete="off" class="layui-input">
-                            </div>
-                        </div>
-                        <div class="layui-form-item">
-                            <label class="layui-form-label">准驾车型</label>
-                            <div class="layui-input-block">
-                                <select name="carType">
-                                    {% set carTypeList = ['C1', 'C2', 'C3', 'C3D', 'C4', 'C5', 'A1', 'A2', 'A3', 'B1',
-                                    'B2'] %}
-                                    {% for carType in carTypeList %}
-                                    <option value="{{carType}}" {% if carStudent.carType==carType %} checked="checked"
-                                        {% endif %}>{{carType}}</option>
-                                    {% endfor %}
-                                </select>
-                            </div>
-                        </div>
-                        <div class="layui-form-item">
-                            <label class="layui-form-label">申请类型</label>
-                            <div class="layui-input-block">
-                                <select name="registerType">
-                                    {% set registerTypeList = ['初次申领', '增驾'] %}
-                                    {% for registerType in registerTypeList %}
-                                    <option value="{{registerType}}" {% if carStudent.registerType==registerType %}
-                                        checked="checked" {% endif %}>{{registerType}}</option>
-                                    {% endfor %}
-                                </select>
-                            </div>
-                        </div>
                     </div>
                 </div>
-            </div>
-        </div>
-    </div>
-    <div class="layui-form-item layui-layout-admin">
-        <div class="layui-input-block">
-            <div class="layui-footer" style="left: 0;">
-                {% if carStudent.id %}
-                <button class="layui-btn" lay-submit="" lay-filter="submit">保存编辑</button>
-                {% endif %}
-                {% if !carStudent.id %} <button class="layui-btn" lay-submit="" lay-filter="submit">添加学员</button>
-                {% endif %}
-                <button type="reset" class="layui-btn layui-btn-primary" id="rest">重置</button>
             </div>
         </div>
     </div>
@@ -261,13 +96,7 @@
         laydate.render({
             elem: '#registerDate'
         })
-        laydate.render({
-            elem: '#birthday'
-        })
-        laydate.render({
-            elem: '#cardExpiryDate'
-        })
-        var index = 4
+        var index = 1
         var cache = {}
 
         function renderSelect(name) {
@@ -294,15 +123,17 @@
                 }
             })
         }
-        renderSelect('campus')
-        renderSelect('referrer')
-        renderSelect('classType')
-        renderSelect('regPoint')
+        renderSelect('cost')
 
-        form.on('select(classType)', function (data) {
-            var name = data.value
-            var price = cache['classType'][name].price || 0
-            $('#registerPrice').val(price)
+        form.on('select(cost)', function (data) {
+            if (data.value) {
+                var name = data.value
+                var price = cache['cost'][name].price || 0
+                $('#price').val(price)
+            } else {
+                $('#price').val('')
+            }
+
         });
         /* 监听提交 */
         form.on('submit(submit)', function (data) {

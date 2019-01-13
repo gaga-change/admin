@@ -165,6 +165,11 @@ const costList = {
             default: false,
             type: Boolean
         },
+        // 备注
+        remark: {
+            default: '',
+            type: String
+        },
         // 缴费时间
         payDate: {
             type: Date
