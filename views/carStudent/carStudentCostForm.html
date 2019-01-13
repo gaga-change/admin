@@ -8,7 +8,9 @@
 {% endblock %}
 {% block content %}
 <form class="layui-form" lay-filter="layuiadmin-app-form-list" id="layuiadmin-app-form-list" style="padding: 20px 30px 0 0;">
-    <input type="hidden" name="id" id="carStudentId" value="{{carStudent.id}}">
+    <input type="hidden" id="carStudentId" name="carStudentId" value="{{carStudent.id}}">
+    <input type="hidden" id="id" name="id" value="{{carStudent.costList.id}}">
+
     <div class="layui-form-item">
         <div class="layui-inline">
             <label class="layui-form-label required">姓名</label>
@@ -53,7 +55,7 @@
                     value="on" {% if carStudent.costList.state %} checked="checked" {% endif %}> </div>
         </div>
     </div>
-    <div class="layui-form-item" id="payDateArea"   {% if !carStudent.costList.state %} style="display:none" {% endif %}>
+    <div class="layui-form-item" id="payDateArea" {% if !carStudent.costList.state %} style="display:none" {% endif %}>
         <label class="layui-form-label required">缴费日期</label>
         <div class="layui-input-block">
             <input type="text" name="payDate" id="payDate" value="{{carStudent.costList.payDate && carStudent.costList.payDate | date('Y-m-d')}}"
@@ -135,6 +137,7 @@
             var field = data.field
             field.state = !!field.state
             if (!field.state) field.payDate = null
+            var carStudentId = $('#carStudentId').val()
             field.cost = {
                 name: field.cost,
                 payDate: field.payDate,
@@ -142,14 +145,27 @@
                 remark: field.remark,
                 state: field.state,
             }
-            admin.req({
-                type: 'post',
-                url: '/api/carStudents/costs',
-                data: field,
-                success: function (res) {
-                    layer.msg('保存成功')
-                }
-            })
+            // 修改
+            if (carStudentId) {
+                admin.req({
+                    type: 'put',
+                    url: '/api/carStudents/' + field.carStudentId + '/costs/' + field.id,
+                    data: field.cost,
+                    success: function (res) {
+                        layer.msg('保存成功')
+                    }
+                })
+            } else {
+                admin.req({
+                    type: 'post',
+                    url: '/api/carStudents/costs',
+                    data: field,
+                    success: function (res) {
+                        layer.msg('保存成功')
+                    }
+                })
+            }
+
             // if (carStudentId) {
             //     admin.req({
             //         type: 'put',

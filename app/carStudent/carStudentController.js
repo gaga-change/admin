@@ -46,13 +46,14 @@ module.exports = router => {
                 id,
                 carStudentId
             })
+            ctx.state.carStudent.id = ctx.state.carStudent._id.toString()
+            ctx.state.carStudent.costList.id = ctx.state.carStudent.costList._id.toString()
         } else {
             ctx.state.carStudent = {
                 ...ctx.query,
                 costList: {}
             }
         }
-        console.log(ctx.state.carStudent)
         await ctx.render('carStudent/carStudentCostForm', ctx.state)
     })
     // 缴费 列表 - 页面
@@ -76,8 +77,11 @@ module.exports = router => {
 
     })
     // 修改缴费
-    router.post('/api/carStudents/:carStudentId/costs/:costId', async ctx => {
-
+    router.put('/api/carStudents/:carStudentId/costs/:costId', async ctx => {
+        let {
+            body
+        } = ctx.request
+        ctx.body = await carStudentService.putCost(ctx, body)
     })
     // 查询缴费
     router.get('/api/carStudents/costs', async ctx => {

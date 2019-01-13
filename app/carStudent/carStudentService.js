@@ -87,8 +87,7 @@ module.exports = {
     },
     /** 查询单条记录 */
     async findCostOne(ctx, object) {
-        const res = await this.DB.aggregate([
-            {
+        const res = await this.DB.aggregate([{
                 $match: {
                     admin: new mongoose.
                     Types.ObjectId(ctx.state.admin._id),
@@ -106,5 +105,23 @@ module.exports = {
 
         ])
         return res[0] || null
+    },
+    /** 修改缴费 */
+    async putCost(ctx, object) {
+        const {
+            carStudentId,
+            costId
+        } = ctx.params
+        const update = {}
+
+        for (const key in object) {
+            update[`costList.$.${key}`] = object[key]
+        }
+        // 修改参数
+        return await this.DB.updateOne({
+            '_id': carStudentId,
+            'admin': ctx.state.admin,
+            'costList._id': costId
+        }, update)
     }
 }
