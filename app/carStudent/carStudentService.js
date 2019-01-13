@@ -1,3 +1,4 @@
+const only = require('only')
 const CarStudent = require('./carStudentSchema')
 const baseService = require('../base/baseService')
 const code = require('../code')
@@ -29,4 +30,12 @@ module.exports = {
             _id: object._id
         }, object)
     },
+    /** 添加缴费 */
+    async addCost(ctx, object) {
+        const carStudent = await CarStudent.findOne({name: object.name, card: object.card})
+        ctx.assert(carStudent, code.BadRequest, `学员【${object.name}】不存在`)
+        const cost = only(object.cost, 'name payDate price remark state')
+        carStudent.costList.push(cost)
+        return await carStudent.save()
+    }
 }

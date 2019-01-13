@@ -1,82 +1,75 @@
 {% extends '../template/layout.html' %}
-
+{% block link %}
+<style>
+    html,body {
+        background: #fff;
+    }
+</style>
+{% endblock %}
 {% block content %}
-<form class="layui-form" lay-filter="layuiadmin-app-form-list" id="layuiadmin-app-form-list">
+<form class="layui-form" lay-filter="layuiadmin-app-form-list" id="layuiadmin-app-form-list" style="padding: 20px 30px 0 0;">
     <input type="hidden" name="id" id="carStudentId" value="{{carStudent.id}}">
-    <div class="layui-fluid">
-        <div class="layui-row layui-col-space15">
-            <div class="layui-col-md6">
-                <div class="layui-card">
-                    <div class="layui-card-header">基本信息</div>
-                    <div class="layui-card-body">
-                        <div class="layui-form-item">
-                            <div class="layui-inline">
-                                <label class="layui-form-label required">姓名</label>
-                                <div class="layui-input-inline">
-                                    <input type="text" name="name" value="{{carStudent.name }}" required lay-verify="required"
-                                        placeholder="" minlength="1" maxlength="10" autocomplete="off" class="layui-input">
-                                </div>
-                            </div>
-                        </div>
-                        <div class="layui-form-item">
-                            <div class="layui-inline">
-                                <label class="layui-form-label required">证件号码</label>
-                                <div class="layui-input-inline">
-                                    <input type="text" name="card" value="{{ carStudent.card }}" lay-verify="identity"
-                                        placeholder="" autocomplete="off" class="layui-input" required>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="layui-card">
-                    <div class="layui-card-header">备注</div>
-                    <div class="layui-card-body layui-row layui-col-space10">
-                        <div class="layui-col-md12">
-                            <textarea name="remark" placeholder="请输入" class="layui-textarea">{{carStudent.remark}}</textarea>
-                        </div>
-                    </div>
-                </div>
+    <div class="layui-form-item">
+        <div class="layui-inline">
+            <label class="layui-form-label required">姓名</label>
+            <div class="layui-input-inline">
+                <input type="text" name="name" value="{{carStudent.name}}" lay-verify="required" required placeholder=""
+                    minlength="1" maxlength="10" autocomplete="off" class="layui-input">
             </div>
-            <div class="layui-col-md6">
-                <div class="layui-card">
-                    <div class="layui-card-header">报名相关
-                        <i class="layui-icon layui-icon-loading layui-icon layui-anim layui-anim-rotate layui-anim-loop"
-                            id="ajaxLoadingIco"></i>
-                    </div>
-                    <div class="layui-card-body">
-                        <div class="layui-form-item">
-                            <div class="layui-inline">
-                                <label class="layui-form-label required">缴费类型</label>
-                                <div class="layui-input-inline">
-                                    <select name="cost" lay-verify="required" lay-filter="cost" id="cost">
-                                        <option value=""></option>
-                                        {% if carStudent.cost %}<option value="{{carStudent.cost}}" selected>{{carStudent.cost}}</option>
-                                        {% endif %}
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="layui-inline">
-                                <label class="layui-form-label required">价格</label>
-                                <div class="layui-input-inline">
-                                    <input class="layui-input" type="number" lay-verify="number" name="price" value="{{carStudent.price}}"
-                                        min="0" max="999999" id="price">
-                                </div>
-                            </div>
-                        </div>
-                        <div class="layui-form-item">
-                            <div class="layui-inline">
-                                <label class="layui-form-label required">缴费日期</label>
-                                <div class="layui-input-inline">
-                                    <input type="text" name="registerDate" id="registerDate" value="{{carStudent.registerDate && carStudent.registerDate | date('Y-m-d')}}"
-                                        id="LAY-component-form-group-date" lay-verify="date" placeholder="" required
-                                        autocomplete="off" class="layui-input">
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+        </div>
+        <div class="layui-inline">
+            <label class="layui-form-label required">证件号码</label>
+            <div class="layui-input-inline">
+                <input type="text" name="card" value="{{carStudent.card}}" lay-verify="identity" required placeholder=""
+                    autocomplete="off" class="layui-input">
             </div>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <div class="layui-inline">
+            <label class="layui-form-label required">缴费类型</label>
+            <div class="layui-input-inline">
+
+                <select name="cost" lay-verify="required" lay-filter="cost" id="cost">
+                    <option value=""></option>
+                    {% if carStudent.cost %}<option value="{{carStudent.cost}}" selected>{{carStudent.cost}}</option>
+                    {% endif %}
+                </select>
+            </div>
+        </div>
+        <div class="layui-inline">
+            <label class="layui-form-label required">价格</label>
+            <div class="layui-input-inline">
+                <input class="layui-input" type="number" lay-verify="number" name="price" value="{{carStudent.price}}"
+                    min="0" max="999999" id="price">
+            </div>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <div class="layui-inline">
+            <label class="layui-form-label">缴费状态</label>
+            <div class="layui-input-inline">
+                <input type="checkbox" lay-verify="required" lay-filter="state" name="state" lay-skin="switch" lay-text="已缴费|未缴费"
+                    value="on" {% if carStudent.healthExamination %} checked="checked" {% endif %}> </div>
+        </div>
+    </div>
+    <div class="layui-form-item" id="payDateArea" style="display:none">
+        <label class="layui-form-label required">缴费日期</label>
+        <div class="layui-input-block">
+            <input type="text" name="payDate" id="payDate" value="{{carStudent.payDate && carStudent.payDate | date('Y-m-d')}}"
+                lay-verify="date" placeholder="" s autocomplete="off" class="layui-input" lay-filter="payDate">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">备注</label>
+        <div class="layui-input-block">
+            <textarea name="remark" placeholder="请输入" class="layui-textarea">{{carStudent.remark}}</textarea>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <div class="layui-input-block">
+            <button class="layui-btn" lay-submit="" lay-filter="submit">保存</button>
+            <!-- <button type="button" class="layui-btn layui-btn-primary" id="rest">重置</button> -->
         </div>
     </div>
 </form>
@@ -87,14 +80,16 @@
         base: '/' //静态资源所在路径
     }).extend({
         index: 'js/lib/index' //主入口模块
-    }).use(['index', 'form', 'laydate'], function () {
+    }).use(['index', 'form', 'laydate', 'util'], function () {
+
         var admin = layui.admin
         var form = layui.form
         var layer = layui.layer
         var laydate = layui.laydate
-
+        var util = layui.util
+        $('#payDate').val(util.toDateString(new Date(), 'yyyy-MM-dd'))
         laydate.render({
-            elem: '#registerDate'
+            elem: '#payDate'
         })
         var index = 1
         var cache = {}
@@ -138,42 +133,57 @@
         /* 监听提交 */
         form.on('submit(submit)', function (data) {
             var field = data.field
-            field.subjects = getCheckBoxVal('subjects')
-            field.carTypes = getCheckBoxVal('carTypes')
-            field.status = !!field.status
-            var carStudentId = $('#carStudentId').val()
-            if (carStudentId) {
-                admin.req({
-                    type: 'put',
-                    url: '/api/carStudents/' + carStudentId,
-                    data: field,
-                    success: function (res) {
-                        layer.msg('保存成功')
-                    }
-                })
-            } else {
-                admin.req({
-                    type: 'post',
-                    url: '/api/carStudents',
-                    data: field,
-                    success: function (res) {
-                        $('#rest')[0].click()
-                        layer.msg('保存成功')
-                    }
-                })
+            field.state = !!field.state
+            if (!field.state) field.payDate = null
+            field.cost = {
+                name: field.cost,
+                payDate: field.payDate,
+                price: field.price,
+                remark: field.remark,
+                state: field.state,
             }
-            return false;
-        });
-
-        function getCheckBoxVal(name) {
-            var valArr = []
-            $('[name=' + name + ']').each(function (index, ele) {
-                if ($(ele).prop('checked')) {
-                    valArr.push($(ele).val())
+            admin.req({
+                type: 'post',
+                url: '/api/carStudents/costs',
+                data: field,
+                success: function (res) {
+                    layer.msg('保存成功')
                 }
             })
-            return valArr
-        }
+            // if (carStudentId) {
+            //     admin.req({
+            //         type: 'put',
+            //         url: '/api/carStudents/' + carStudentId,
+            //         data: field,
+            //         success: function (res) {
+            //             layer.msg('保存成功')
+            //         }
+            //     })
+            // } else {
+            //     admin.req({
+            //         type: 'post',
+            //         url: '/api/carStudents',
+            //         data: field,
+            //         success: function (res) {
+            //             $('#rest')[0].click()
+            //             layer.msg('保存成功')
+            //         }
+            //     })
+            // }
+            return false;
+        });
+        form.on('switch(state)', function (data) {
+            if (data.elem.checked) {
+                $('#payDateArea').show()
+            } else {
+                $('#payDateArea').hide()
+                $('#payDate').val(util.toDateString(new Date(), 'yyyy-MM-dd'))
+                laydate.render({
+                    elem: '#payDate'
+                })
+            }
+        });
+
     })
 </script>
 {% endblock %}

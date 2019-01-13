@@ -44,5 +44,27 @@ module.exports = router => {
         }
         await ctx.render('carStudent/carStudentCostForm', ctx.state)
     })
+    // 添加缴费
+    // router.post('/api/carStudents/:carStudentId/costs', async ctx => {
+    //     let {body} = ctx.request
+    //     return await carStudentService.addCost(ctx, body)
+    // })
+    router.post('/api/carStudents/costs',tools.checkAuth2, async ctx => {
+        let {body} = ctx.request
+        ctx.assert(body.name && body.card && body.cost, code.BadRequest, '参数异常')
+        return ctx.body = await carStudentService.addCost(ctx, body)
+    })
+    // 删除缴费
+    router.delete('/api/carStudents/:carStudentId/costs/:costId', async ctx => {
+
+    })
+    // 修改缴费
+    router.post('/api/carStudents/:carStudentId/costs/:costId', async ctx => {
+
+    })
+    // 查询缴费
+    router.get('/api/carStudents/:carStudentId/costs', async ctx => {
+
+    })
     baseController(router, carStudentService, 'carStudents')
 }
