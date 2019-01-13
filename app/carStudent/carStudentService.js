@@ -1,4 +1,5 @@
 const only = require('only')
+const mongoose = require('mongoose')
 const CarStudent = require('./carStudentSchema')
 const baseService = require('../base/baseService')
 const code = require('../code')
@@ -35,6 +36,7 @@ module.exports = {
         const carStudent = await CarStudent.findOne({name: object.name, card: object.card})
         ctx.assert(carStudent, code.BadRequest, `学员【${object.name}】不存在`)
         const cost = only(object.cost, 'name payDate price remark state')
+        cost._id = new mongoose.Types.ObjectId
         carStudent.costList.push(cost)
         return await carStudent.save()
     }
