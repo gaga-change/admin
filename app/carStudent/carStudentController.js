@@ -37,12 +37,16 @@ module.exports = router => {
         }
         await ctx.render('carStudent/carStudentStateForm', ctx.state)
     })
-    // 缴费 - 页面
+    // 缴费 编辑&添加 - 页面
     router.get('/carStudent/carStudentCostForm.html', async ctx => {
         ctx.state.carStudent = {
             ...ctx.query
         }
         await ctx.render('carStudent/carStudentCostForm', ctx.state)
+    })
+    // 缴费 列表 - 页面
+    router.get('/carStudent/carStudentCostList.html', async ctx => {
+        await ctx.render('carStudent/carStudentCostList', ctx.state)
     })
     // 添加缴费
     // router.post('/api/carStudents/:carStudentId/costs', async ctx => {
