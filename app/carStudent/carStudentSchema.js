@@ -181,12 +181,12 @@ const costList = {
 // 教练
 const trainers = {
     // 科目二教练
-    traninerTwo: {
+    trainerTwo: {
         ref: 'CarTrainer',
         type: Schema.Types.ObjectId
     },
     // 科目三教练
-    traninerThree: {
+    trainerThree: {
         ref: 'CarTrainer',
         type: Schema.Types.ObjectId
     }
@@ -197,6 +197,7 @@ const CarStudentSchema = new Schema({
     ...dict,
     ...state,
     ...costList,
+    ...trainers,
     // 报名日期
     registerDate: {
         default: Date.now(),
@@ -246,6 +247,7 @@ CarStudentSchema.statics = {
         return Promise.all([
             this.find(criteria)
             .select(select)
+            .populate('trainerTwo trainerThree')
             .sort({
                 createdAt: -1
             })

@@ -2,9 +2,14 @@ const only = require('only')
 const code = require('../code')
 const tools = require('../tools')
 const Page = require('../tools/Page')
+const CarStudent = require('./carStudentSchema')
 const carStudentService = require('./carStudentService')
 const baseController = require('../base/baseController')
 module.exports = router => {
+    // .3 -> .4 补丁
+    router.get('/api/carStudents/append', async ctx => {
+        ctx.body = await CarStudent.updateMany({}, {$set: {trainerTwo: null, trainerThree: null}})
+    })
     // 列表 - 页面
     router.get('/carStudent/carStudentList.html', async ctx => {
         await ctx.render('carStudent/carStudentList', ctx.state)

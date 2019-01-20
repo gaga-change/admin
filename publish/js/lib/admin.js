@@ -104,7 +104,6 @@ layui.define("view", function (exports) {
             },
             theme: function (e) {
                 $('iframe').each(function(index, ele) {
-                    console.log()
                     ele.contentWindow.layui && ele.contentWindow.layui.admin && ele.contentWindow.layui.admin.theme(e)
                 })
                 var t = (n.theme, layui.data(n.tableName)),

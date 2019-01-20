@@ -20,13 +20,15 @@ module.exports = {
     },
     /** 修改 */
     async modify(ctx, object) {
-        let trainer = await this.DB.findOne({
-            _id: {
-                $ne: object._id
-            },
-            name: object.name
-        })
-        ctx.assert(!trainer, code.BadRequest, '该姓名已存在，请尝试姓名后面添加数字。<br/>如：张三1')
+        if (object.name) {
+            let trainer = await this.DB.findOne({
+                _id: {
+                    $ne: object._id
+                },
+                name: object.name
+            })
+            ctx.assert(!trainer, code.BadRequest, '该姓名已存在，请尝试姓名后面添加数字。<br/>如：张三1')
+        }
         delete object.admin
         return await this.DB.updateOne({
             _id: object._id

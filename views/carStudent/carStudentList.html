@@ -35,20 +35,12 @@
         </script>
             <script type="text/html" id="trainerTwoTpl">
                 {% raw %}
-          {{#  if(d.trainerTwo){ }}
-                有教练
-          {{#  } else { }}
-            <a class="c-blur" href="JavaScript:void(0)" onclick="chooseTrainer(this)">绑定教练</a>
-          {{#  } }}
+            <a class="c-blur" href="JavaScript:void(0)" lay-event="choose" data-type="trainerTwo">{{d.trainerTwo ? d.trainerTwo.name : '绑定教练'}}</a>
           {% endraw %}
         </script>
             <script type="text/html" id="trainerThreeTpl">
                 {% raw %}
-          {{#  if(d.trainerThree){ }}
-          有教练
-          {{#  } else { }}
-          <a class="c-blur" href="JavaScript:void(0)" onclick="chooseTrainer(this)">绑定教练</a>
-          {{#  } }}
+                <a class="c-blur" href="JavaScript:void(0)" lay-event="choose" data-type="trainerThree">{{d.trainerThree ? d.trainerThree.name : '绑定教练'}}</a>
           {% endraw %}
         </script>
             <script type="text/html" id="table-content-list">
@@ -71,26 +63,6 @@
         var table = layui.table,
             admin = layui.admin,
             form = layui.form;
-
-        window.chooseTrainer = function chooseTrainer(ele) {
-            layer.open({
-                type: 2,
-                title: '选择教练',
-                content: '/carTrainer/carTrainerChooseList.html',
-                maxmin: true,
-                area: ['80%', '80%'],
-                btn: ['确定', '取消'],
-                yes: function (index, layero) {
-                    var iframe = layero.find('iframe')[0]                    
-                    var trainer = iframe.contentWindow.getTrainer()[0]
-                    if (trainer) {
-                        layer.close(index)
-                    } else {
-                        layer.msg('请选择教练')
-                    }
-                }
-            });
-        }
 
         //监听搜索
         form.on('submit(LAY-app-contlist-search)', function (data) {
@@ -211,6 +183,7 @@
         })
         table.on("tool(LAY-app-content-list)",
             function (obj) {
+                var ele = $(this)
                 var data = obj.data;
                 if ("del" === obj.event) {
                     layer.confirm("确定删除此学员？", function (index) {
@@ -228,6 +201,39 @@
                     top.layui && top.layui.index.openTabsPage('/carStudent/carStudentCostForm.html?name=' +
                         data.name + '&card=' + data.card,
                         data.name + '-缴费')
+                } else if ("choose" == obj.event) {
+                    var type = ele.attr('data-type')
+                    layer.open({
+                        type: 2,
+                        title: '选择教练',
+                        content: '/carTrainer/carTrainerChooseList.html',
+                        maxmin: true,
+                        area: ['80%', '80%'],
+                        btn: ['确定', '取消'],
+                        yes: function (index, layero) {
+                            var iframe = layero.find('iframe')[0]
+                            var trainer = iframe.contentWindow.getTrainer()[0]
+                            if (trainer) {
+                                // layer.close(index)
+                                // ele.text(trainer.name)
+                                var params = {}
+                                params[type] = trainer._id
+                                admin.req({
+                                    type: 'put',
+                                    url: '/api/carStudents/' + data._id,
+                                    data: params,
+                                    success: function (res) {
+                                        params[type] = trainer
+                                        obj.update(layui.$.extend({}, params));
+                                        form.render();
+                                        layer.close(index)
+                                    }
+                                })
+                            } else {
+                                layer.msg('请选择教练')
+                            }
+                        }
+                    });
                 }
             })
     });
