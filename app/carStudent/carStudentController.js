@@ -18,6 +18,11 @@ module.exports = router => {
     router.get('/carStudent/carStudentStateList.html', async ctx => {
         await ctx.render('carStudent/carStudentStateList', ctx.state)
     })
+    // 指定教练下的学员 - 页面
+    router.get('/carStudent/carTrainerStudentList.html', async ctx => {
+        ctx.state.carStudent = ctx.query
+        await ctx.render('carStudent/carTrainerStudentList', ctx.state)
+    })
     // 表单 - 页面
     router.get('/carStudent/carStudentForm.html', async ctx => {
         let id = ctx.query.id

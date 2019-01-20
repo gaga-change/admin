@@ -1,0 +1,239 @@
+{% extends '../template/layout.html' %}
+{% block content %}
+<div class="layui-fluid">
+    <input type="hidden" id="trainerId" value="{{carStudent.trainerId}}">
+    <div class="layui-card">
+        <div class="layui-form layui-card-header layuiadmin-card-header-auto">
+            <div class="layui-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label">姓名</label>
+                    <div class="layui-input-inline">
+                        <input type="text" name="name" placeholder="请输入" autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <button class="layui-btn layuiadmin-btn-list" lay-submit lay-filter="LAY-app-contlist-search">
+                        <i class="layui-icon layui-icon-search layuiadmin-button-btn"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div class="layui-card-body">
+            <table id="LAY-app-content-list" lay-filter="LAY-app-content-list"></table>
+            
+            <script type="text/html" id="trainerTwoTpl">
+                {% raw %}
+            {{d.trainerTwo ? d.trainerTwo.name : ''}}
+          {% endraw %}
+        </script>
+            <script type="text/html" id="trainerThreeTpl">
+                {% raw %}
+                {{d.trainerThree ? d.trainerThree.name : ''}}
+          {% endraw %}
+        </script>
+        <script type="text/html" id="passSubjectsTemplet">
+            {% raw %}
+      {{#  if(d.subjectOne){ }}
+      <button class="layui-btn layui-btn-xs">科目一</button>
+      {{#  } }}
+      {{#  if(d.subjectTwo){ }}
+      <button class="layui-btn layui-btn-xs">科目二</button>
+      {{#  } }}
+      {{#  if(d.subjectThree){ }}
+      <button class="layui-btn layui-btn-xs">科目三路考</button>
+      {{#  } }}
+      {{#  if(d.subjectFour){ }}
+      <button class="layui-btn layui-btn-xs">科目三理论</button>
+      {{#  } }}
+      {% endraw %}
+    </script>
+        </div>
+    </div>
+</div>
+{% endblock %}
+{% block script %}
+<script>
+    layui.config({
+        base: '/' //静态资源所在路径
+    }).extend({
+        index: 'js/lib/index' //主入口模块
+    }).use(['index', 'table'], function () {
+        var table = layui.table,
+            admin = layui.admin,
+            form = layui.form;
+
+        //监听搜索
+        form.on('submit(LAY-app-contlist-search)', function (data) {
+            var field = data.field;
+            //执行重载
+            table.reload('LAY-app-content-list', {
+                where: field
+            });
+        });
+
+        var $ = layui.$,
+            active = {
+                batchdel: function () {
+                    var checkStatus = table.checkStatus('LAY-app-content-list'),
+                        checkData = checkStatus.data; //得到选中的数据
+
+                    if (checkData.length === 0) {
+                        return layer.msg('请选择数据');
+                    }
+                    layer.confirm('确定删除吗？', function (index) {
+                        var ids = []
+                        checkData.forEach(function (item) {
+                            ids.push(item._id)
+                        })
+                        admin.req({
+                            type: 'DELETE',
+                            url: '/api/carStudents?ids=' + ids.join(','),
+                            success: function (res) {
+                                table.reload('LAY-app-content-list');
+                                layer.msg('已删除');
+                            }
+                        })
+                    });
+                },
+                add: function () {
+                    top.layui && top.layui.index.openTabsPage('/carStudent/carStudentForm.html', '学员录入')
+                }
+            };
+
+        $('.layui-btn.layuiadmin-btn-list').on('click', function () {
+            var type = $(this).data('type');
+            active[type] ? active[type].call(this) : '';
+        });
+
+        table.render({
+            elem: "#LAY-app-content-list",
+            url: "/api/carStudents",
+            where: {
+                trainerId: $('#trainerId').val()
+            },
+            parseData: function (res) { //res 即为原始返回的数据
+                res.data.forEach(function (item) {
+                    item.createdAt = layui.util.timeAgo(item.createdAt, true)
+                    item.registerDate = layui.util.toDateString(item.registerDate,
+                        'yyyy-MM-dd')
+                })
+                return {
+                    "code": 0, //解析接口状态
+                    "msg": '', //解析提示文本
+                    "count": res.page.count, //解析数据长度
+                    "data": res.data //解析数据列表
+                };
+            },
+            text: {
+                none: '暂无相关数据'
+            },
+            cols: [
+                [
+                    {
+                        field: "name",
+                        title: "姓名",
+                    },
+                    {
+                        field: "card",
+                        title: "证件号",
+                    }, {
+                        field: "phone",
+                        title: "手机号",
+                    }, {
+                        field: "classType",
+                        title: "班型",
+                    }, {
+                        field: "carType",
+                        title: "培训车型",
+                    }, {
+                        field: "trainerTwo",
+                        title: "科目二教练",
+                        templet: "#trainerTwoTpl"
+                    },
+                    {
+                        field: "trainerThree",
+                        title: "科目三教练",
+                        templet: "#trainerThreeTpl"
+                    },
+                    {
+                        title: "已通过科目",
+                        minWidth: 320,
+                        templet: "#passSubjectsTemplet"
+                    },
+                    {
+                        field: "registerDate",
+                        title: "报名日期",
+                    }
+                ]
+            ],
+            page: !0,
+            request: {
+                limitName: 'pageSize'
+            },
+            limit: 10,
+            limits: [10, 15, 20, 25, 30]
+        })
+        table.on("tool(LAY-app-content-list)",
+            function (obj) {
+                var ele = $(this)
+                var data = obj.data;
+                if ("del" === obj.event) {
+                    layer.confirm("确定删除此学员？", function (index) {
+                        admin.req({
+                            type: 'delete',
+                            url: '/api/carStudents/' + data._id
+                        })
+                        obj.del()
+                        layer.close(index)
+                    })
+                } else if ("edit" === obj.event) {
+                    top.layui && top.layui.index.openTabsPage('/carStudent/carStudentForm.html?id=' + data._id,
+                        data.name)
+                } else if ("cost" === obj.event) {
+                    top.layui && top.layui.index.openTabsPage('/carStudent/carStudentCostForm.html?name=' +
+                        data.name + '&card=' + data.card,
+                        data.name + '-缴费')
+                } else if ("choose" == obj.event) {
+                    var type = ele.attr('data-type')
+                    var query = [
+                        'status=true',
+                        'carTypes=' + data.carType,
+                        'subjects=' + (type == 'trainerTwo' ? '科目二' : '科目三')
+                    ]
+                    layer.open({
+                        type: 2,
+                        title: '选择教练',
+                        content: '/carTrainer/carTrainerChooseList.html?' + query.join('&'),
+                        maxmin: true,
+                        area: ['80%', '80%'],
+                        btn: ['确定', '取消'],
+                        yes: function (index, layero) {
+                            var iframe = layero.find('iframe')[0]
+                            var trainer = iframe.contentWindow.getTrainer()[0]
+                            if (!trainer && !data[type]) {
+                                layer.msg('请选择教练')
+                            } else {
+                                var params = {}
+                                params[type] = trainer ? trainer._id : null
+                                admin.req({
+                                    type: 'put',
+                                    url: '/api/carStudents/' + data._id,
+                                    headers: {
+                                        'Content-Type': 'application/json'
+                                    },
+                                    data: JSON.stringify(params),
+                                    success: function (res) {
+                                        params[type] = trainer || null
+                                        obj.update(layui.$.extend({}, params));
+                                        form.render();
+                                        layer.close(index)
+                                    }
+                                })
+                            }
+                        }
+                    });
+                }
+            })
+    });
+</script>
+{% endblock %}

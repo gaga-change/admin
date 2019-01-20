@@ -64,7 +64,8 @@
           {% endraw %}
         </script>
             <script type="text/html" id="table-content-list">
-                <a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="edit"><i class="layui-icon layui-icon-edit"></i>查看</a>
+                <a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="showStudent"><i class="layui-icon layui-icon-user"></i>学员</a>
+                <a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="edit"><i class="layui-icon layui-icon-edit"></i>查询</a>
           <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del"><i class="layui-icon layui-icon-delete"></i>删除</a>
         </script>
         </div>
@@ -182,7 +183,7 @@
                     },
                     {
                         title: "操作",
-                        minWidth: 150,
+                        minWidth: 220,
                         align: "center",
                         fixed: "right",
                         toolbar: "#table-content-list"
@@ -211,6 +212,8 @@
                 } else if ("edit" === obj.event) {
                     top.layui && top.layui.index.openTabsPage('/carTrainer/carTrainerForm.html?id=' + data._id,
                         data.name)
+                } else if ("showStudent" === obj.event) {
+                    top.layui && top.layui.index.openTabsPage('/carStudent/carTrainerStudentList.html?trainerId=' + data._id, data.name + '的学员')
                 }
             })
     })

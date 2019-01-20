@@ -140,4 +140,28 @@ module.exports = {
             $pull: {costList: {_id: costId}}
         })
     },
+    /** 查询 */
+    async list(ctx, object, page) {
+        object.admin = ctx.state.admin
+        if (page) {
+            let criteria = {}
+            this.DB.schema.eachPath(function(path) {
+                if (object[path]) criteria[path] = object[path]
+            })
+            if (object.trainerId) {
+                criteria['$or'] = [
+                    {trainerTwo: object.trainerId},
+                    {trainerThree: object.trainerId}
+                ]
+            }
+            return await this.DB.findAll({
+                page: page.page,
+                pageSize: page.pageSize,
+                select: '',
+                criteria
+            })
+        } else {
+            return await this.DB.findById(object._id)
+        }
+    }
 }
