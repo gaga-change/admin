@@ -6,3 +6,10 @@ label.required:after { content: "*"; position: absolute; right: 5px; color: #FF5
 .layui-btn.layui-btn-primary {
     background-color: #fff;
 }
+
+.c-blur {
+    color: #01AAED
+}
+.c-blur:hover {
+    color: #01AAEDAA
+}

@@ -178,6 +178,20 @@ const costList = {
     }]
 }
 
+// 教练
+const trainers = {
+    // 科目二教练
+    traninerTwo: {
+        ref: 'CarTrainer',
+        type: Schema.Types.ObjectId
+    },
+    // 科目三教练
+    traninerThree: {
+        ref: 'CarTrainer',
+        type: Schema.Types.ObjectId
+    }
+}
+
 const CarStudentSchema = new Schema({
     ...person,
     ...dict,
