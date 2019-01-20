@@ -7,25 +7,39 @@
                 <div class="layui-inline">
                     <label class="layui-form-label">姓名</label>
                     <div class="layui-input-inline">
-                        <input type="text" name="name" placeholder="请输入" autocomplete="off" class="layui-input">
+                        <input type="text" name="name" id="name" placeholder="请输入" autocomplete="off" class="layui-input" value="{{carTrainer.name}}">
                     </div>
                 </div>
                 <div class="layui-inline">
-                        <label class="layui-form-label">状态</label>
-                        <div class="layui-input-inline">
-                            <select name="status" id="status">
-                                <option value="">全部</option>
-                                <option value="false"
-                                {% if carTrainer.status == 'false' %} selected="selected"
-                                            {% endif %}
-                                >未启用</option>
-                                <option value="true"
-                                {% if carTrainer.carType == 'true' %} selected="selected"
-                                            {% endif %}
-                                >启用</option>
-                            </select>
-                        </div>
+                    <label class="layui-form-label">状态</label>
+                    <div class="layui-input-inline">
+                        <select name="status" id="status">
+                            <option value="">全部</option>
+                            <option value="false" {% if carTrainer.status=='false' %} selected="selected" {% endif %}>未启用</option>
+                            <option value="true" {% if carTrainer.status=='true' %} selected="selected" {% endif %}>启用</option>
+                        </select>
                     </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">培训科目</label>
+                    <div class="layui-input-inline">
+                        <select name="subjects" id="subjects">
+                            <option value="">全部</option>
+                            <option value="科目二" {% if carTrainer.subjects=='科目二' %} selected="selected" {% endif %}>科目二</option>
+                            <option value="科目三" {% if carTrainer.subjects=='科目三' %} selected="selected" {% endif %}>科目三</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">培训车型 {{carTrainer.carTypes}}</label>
+                    <div class="layui-input-inline">
+                        <select name="carTypes" id="carTypes">
+                            <option value="">全部</option>
+                            <option value="C1" {% if carTrainer.carTypes=='C1' %} selected="selected" {% endif %}>C1</option>
+                            <option value="C2" {% if carTrainer.carTypes=='C2' %} selected="selected" {% endif %}>C2</option>
+                        </select>
+                    </div>
+                </div>
                 <div class="layui-inline">
                     <button class="layui-btn layuiadmin-btn-list" lay-submit lay-filter="LAY-app-contlist-search">
                         <i class="layui-icon layui-icon-search layuiadmin-button-btn"></i>
@@ -82,7 +96,6 @@
                 batchdel: function () {
                     var checkStatus = table.checkStatus('LAY-app-content-list'),
                         checkData = checkStatus.data; //得到选中的数据
-
                     if (checkData.length === 0) {
                         return layer.msg('请选择数据');
                     }
@@ -103,20 +116,6 @@
                 },
                 add: function () {
                     top.layui && top.layui.index.openTabsPage('/carTrainer/carTrainerForm.html', '添加教练')
-                    // layer.open({
-                    //     type: 2,
-                    //     title: '添加教练',
-                    //     content: '/carTrainer/carTrainerForm.html',
-                    //     maxmin: true,
-                    //     area: ['550px', '550px'],
-                    //     btn: ['确定', '取消'],
-                    //     yes: function (index, layero) {
-                    //         //点击确认触发 iframe 内容中的按钮提交
-                    //         var submit = layero.find('iframe').contents().find(
-                    //             "#layuiadmin-app-form-submit");
-                    //         submit.click();
-                    //     }
-                    // });
                 }
             };
 
@@ -129,7 +128,10 @@
             elem: "#LAY-app-content-list",
             url: "/api/carTrainers",
             where: {
+                name: $('#name').val(),
                 status: $('#status').val(),
+                subjects: $('#subjects').val(),
+                carTypes: $('#carTypes').val()
             },
             parseData: function (res) { //res 即为原始返回的数据
                 res.data.forEach(function (item) {
@@ -210,65 +212,7 @@
                     top.layui && top.layui.index.openTabsPage('/carTrainer/carTrainerForm.html?id=' + data._id,
                         data.name)
                 }
-                // layer.open({
-                //     type: 2,
-                //     title: "编辑教练",
-                //     content: "/carTrainer/carTrainerForm.html?id=" + data._id,
-                //     maxmin: !0,
-                //     area: ["550px", "550px"],
-                //     btn: ["确定", "取消"],
-                //     yes: function (index, layero) {
-                //         var iframe = window["layui-layer-iframe" + index],
-                //             deitEle = layero.find("iframe").contents().find(
-                //                 "#layuiadmin-app-form-edit");
-                //         iframe.layui.form.on("submit(layuiadmin-app-form-edit)",
-                //             function (sonObj) {
-                //                 var field = sonObj.field;
-                //                 admin.req({
-                //                     type: 'put',
-                //                     url: '/api/carTrainers/' + data._id,
-                //                     data: field,
-                //                     success: function (res) {
-                //                         obj.update(layui.$.extend({}, field));
-                //                         form.render();
-                //                         layer.close(index)
-                //                     }
-                //                 })
-                //             }), deitEle.trigger("click")
-                //     }
-                // })
             })
-        table.render({
-            elem: "#LAY-app-content-tags",
-            url: layui.setter.base + "json/content/tags.js",
-            cols: [
-                [{
-                        type: "numbers",
-                        fixed: "left"
-                    },
-                    {
-                        field: "id",
-                        width: 100,
-                        title: "ID",
-                        sort: !0
-                    },
-                    {
-                        field: "tags",
-                        title: "分类名",
-                        minWidth: 100
-                    },
-                    {
-                        title: "操作",
-                        width: 150,
-                        align: "center",
-                        fixed: "right",
-                        toolbar: "#layuiadmin-app-cont-tagsbar"
-                    }
-                ]
-            ],
-            text: "对不起，加载出现异常！"
-        })
-
-    });
+    })
 </script>
 {% endblock %}
