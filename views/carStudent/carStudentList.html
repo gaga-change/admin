@@ -213,24 +213,25 @@
                         yes: function (index, layero) {
                             var iframe = layero.find('iframe')[0]
                             var trainer = iframe.contentWindow.getTrainer()[0]
-                            if (trainer) {
-                                // layer.close(index)
-                                // ele.text(trainer.name)
+                            if (!trainer && !data[type]) {
+                                layer.msg('请选择教练')
+                            } else {
                                 var params = {}
-                                params[type] = trainer._id
+                                params[type] = trainer ? trainer._id : null
                                 admin.req({
                                     type: 'put',
                                     url: '/api/carStudents/' + data._id,
-                                    data: params,
+                                    headers: {
+                                        'Content-Type': 'application/json'
+                                    },
+                                    data: JSON.stringify(params),
                                     success: function (res) {
-                                        params[type] = trainer
+                                        params[type] = trainer || null
                                         obj.update(layui.$.extend({}, params));
                                         form.render();
                                         layer.close(index)
                                     }
                                 })
-                            } else {
-                                layer.msg('请选择教练')
                             }
                         }
                     });
