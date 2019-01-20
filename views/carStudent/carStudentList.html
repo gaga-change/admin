@@ -38,7 +38,7 @@
           {{#  if(d.trainerTwo){ }}
                 有教练
           {{#  } else { }}
-            <a class="c-blur" href="JavaScript:void(0)">绑定教练</a>
+            <a class="c-blur" href="JavaScript:void(0)" onclick="chooseTrainer(this)">绑定教练</a>
           {{#  } }}
           {% endraw %}
         </script>
@@ -47,7 +47,7 @@
           {{#  if(d.trainerThree){ }}
           有教练
           {{#  } else { }}
-          <a class="c-blur" href="JavaScript:void(0)">绑定教练</a>
+          <a class="c-blur" href="JavaScript:void(0)" onclick="chooseTrainer(this)">绑定教练</a>
           {{#  } }}
           {% endraw %}
         </script>
@@ -71,6 +71,23 @@
         var table = layui.table,
             admin = layui.admin,
             form = layui.form;
+
+        window.chooseTrainer = function chooseTrainer(ele) {
+            console.log(ele)
+            layer.open({
+                type: 2,
+                title: '选择教练',
+                content: '/carTrainer/carTrainerList.html',
+                maxmin: true,
+                area: ['80%', '80%'],
+                btn: ['确定', '取消'],
+                yes: function (index, layero) {
+                    // var submit = layero.find('iframe').contents().find(
+                    //     "#layuiadmin-app-form-submit");
+                    // submit.click();
+                }
+            });
+        }
 
         //监听搜索
         form.on('submit(LAY-app-contlist-search)', function (data) {
@@ -107,20 +124,6 @@
                 },
                 add: function () {
                     top.layui && top.layui.index.openTabsPage('/carStudent/carStudentForm.html', '学员录入')
-                    // layer.open({
-                    //     type: 2,
-                    //     title: '学员录入',
-                    //     content: '/carStudent/carStudentForm.html',
-                    //     maxmin: true,
-                    //     area: ['550px', '550px'],
-                    //     btn: ['确定', '取消'],
-                    //     yes: function (index, layero) {
-                    //         //点击确认触发 iframe 内容中的按钮提交
-                    //         var submit = layero.find('iframe').contents().find(
-                    //             "#layuiadmin-app-form-submit");
-                    //         submit.click();
-                    //     }
-                    // });
                 }
             };
 
