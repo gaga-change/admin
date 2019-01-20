@@ -73,7 +73,6 @@
             form = layui.form;
 
         window.chooseTrainer = function chooseTrainer(ele) {
-            console.log(ele)
             layer.open({
                 type: 2,
                 title: '选择教练',
@@ -82,9 +81,13 @@
                 area: ['80%', '80%'],
                 btn: ['确定', '取消'],
                 yes: function (index, layero) {
-                    // var submit = layero.find('iframe').contents().find(
-                    //     "#layuiadmin-app-form-submit");
-                    // submit.click();
+                    var iframe = layero.find('iframe')[0]                    
+                    var trainer = iframe.contentWindow.getTrainer()[0]
+                    if (trainer) {
+                        layer.close(index)
+                    } else {
+                        layer.msg('请选择教练')
+                    }
                 }
             });
         }

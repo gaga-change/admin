@@ -97,6 +97,14 @@
             limit: 10,
             limits: [10, 15, 20, 25, 30]
         })
+
+        // 获取选中的 行数据
+        window.getTrainer = function getTrainer() {
+            var checkStatus = table.checkStatus('LAY-app-content-list')
+            var data = checkStatus.data
+            return data
+        }
+
     })
 </script>
 {% endblock %}
