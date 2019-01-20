@@ -203,10 +203,15 @@
                         data.name + '-缴费')
                 } else if ("choose" == obj.event) {
                     var type = ele.attr('data-type')
+                    var query = [
+                        'status=true',
+                        'carTypes=' + data.carType,
+                        'subjects=' + (type == 'trainerTwo' ? '科目二' : '科目三')
+                    ]
                     layer.open({
                         type: 2,
                         title: '选择教练',
-                        content: '/carTrainer/carTrainerChooseList.html',
+                        content: '/carTrainer/carTrainerChooseList.html?' + query.join('&'),
                         maxmin: true,
                         area: ['80%', '80%'],
                         btn: ['确定', '取消'],

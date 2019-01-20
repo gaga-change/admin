@@ -7,7 +7,38 @@
                 <div class="layui-inline">
                     <label class="layui-form-label">姓名</label>
                     <div class="layui-input-inline">
-                        <input type="text" name="name" placeholder="请输入" autocomplete="off" class="layui-input">
+                        <input type="text" name="name" id="name" placeholder="请输入" autocomplete="off" class="layui-input"
+                            value="{{carTrainer.name}}">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">状态</label>
+                    <div class="layui-input-inline">
+                        <select name="status" id="status">
+                            <option value="">全部</option>
+                            <option value="false" {% if carTrainer.status=='false' %} selected="selected" {% endif %}>未启用</option>
+                            <option value="true" {% if carTrainer.status=='true' %} selected="selected" {% endif %}>启用</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">培训科目</label>
+                    <div class="layui-input-inline">
+                        <select name="subjects" id="subjects">
+                            <option value="">全部</option>
+                            <option value="科目二" {% if carTrainer.subjects=='科目二' %} selected="selected" {% endif %}>科目二</option>
+                            <option value="科目三" {% if carTrainer.subjects=='科目三' %} selected="selected" {% endif %}>科目三</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">培训车型 {{carTrainer.carTypes}}</label>
+                    <div class="layui-input-inline">
+                        <select name="carTypes" id="carTypes">
+                            <option value="">全部</option>
+                            <option value="C1" {% if carTrainer.carTypes=='C1' %} selected="selected" {% endif %}>C1</option>
+                            <option value="C2" {% if carTrainer.carTypes=='C2' %} selected="selected" {% endif %}>C2</option>
+                        </select>
                     </div>
                 </div>
                 <div class="layui-inline">
@@ -50,7 +81,10 @@
             elem: "#LAY-app-content-list",
             url: "/api/carTrainers",
             where: {
+                name: $('#name').val(),
                 status: $('#status').val(),
+                subjects: $('#subjects').val(),
+                carTypes: $('#carTypes').val()
             },
             parseData: function (res) { //res 即为原始返回的数据
                 res.data.forEach(function (item) {
