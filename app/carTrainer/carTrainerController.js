@@ -10,6 +10,11 @@ module.exports = router => {
         ctx.state.carTrainer = ctx.query
         await ctx.render('carTrainer/carTrainerList', ctx.state)
     })
+    // 列表选择 - 页面
+    router.get('/carTrainer/carTrainerChooseList.html', async ctx => {
+        ctx.state.carTrainer = ctx.query
+        await ctx.render('carTrainer/carTrainerChooseList', ctx.state)
+    })
     // 表单 - 页面
     router.get('/carTrainer/carTrainerForm.html', async ctx => {
         let id = ctx.query.id

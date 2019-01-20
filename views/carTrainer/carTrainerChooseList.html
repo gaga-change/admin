@@ -1,0 +1,102 @@
+{% extends '../template/layout.html' %}
+{% block content %}
+<div class="layui-fluid">
+    <div class="layui-card">
+        <div class="layui-form layui-card-header layuiadmin-card-header-auto">
+            <div class="layui-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label">姓名</label>
+                    <div class="layui-input-inline">
+                        <input type="text" name="name" placeholder="请输入" autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <button class="layui-btn layuiadmin-btn-list" lay-submit lay-filter="LAY-app-contlist-search">
+                        <i class="layui-icon layui-icon-search layuiadmin-button-btn"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="layui-card-body">
+            <table id="LAY-app-content-list" lay-filter="LAY-app-content-list"></table>
+        </div>
+    </div>
+</div>
+{% endblock %}
+{% block script %}
+<script>
+    layui.config({
+        base: '/' //静态资源所在路径
+    }).extend({
+        index: 'js/lib/index' //主入口模块
+    }).use(['index', 'table'], function () {
+        var table = layui.table,
+            admin = layui.admin,
+            form = layui.form;
+
+        //监听搜索
+        form.on('submit(LAY-app-contlist-search)', function (data) {
+            var field = data.field;
+            //执行重载
+            table.reload('LAY-app-content-list', {
+                where: field
+            });
+        });
+
+        var $ = layui.$
+
+        table.render({
+            elem: "#LAY-app-content-list",
+            url: "/api/carTrainers",
+            where: {
+                status: $('#status').val(),
+            },
+            parseData: function (res) { //res 即为原始返回的数据
+                res.data.forEach(function (item) {
+                    item.createdAt = layui.util.timeAgo(item.createdAt, true)
+                })
+                return {
+                    "code": 0, //解析接口状态
+                    "msg": '', //解析提示文本
+                    "count": res.page.count, //解析数据长度
+                    "data": res.data //解析数据列表
+                };
+            },
+            text: {
+                none: '暂无相关数据'
+            },
+            cols: [
+                [{
+                        type: "radio",
+                        fixed: "left"
+                    },
+                    {
+                        field: "name",
+                        title: "姓名",
+                    },
+                    {
+                        field: "card",
+                        title: "身份证",
+                    }, {
+                        field: "phone",
+                        title: "手机号",
+                    }, {
+                        field: "subjects",
+                        title: "培训科目",
+                    }, {
+                        field: "carTypes",
+                        title: "培训车型",
+                    }
+                ]
+            ],
+            page: !0,
+            request: {
+                limitName: 'pageSize'
+            },
+            limit: 10,
+            limits: [10, 15, 20, 25, 30]
+        })
+    })
+</script>
+{% endblock %}
