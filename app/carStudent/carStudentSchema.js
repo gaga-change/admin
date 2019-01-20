@@ -182,11 +182,13 @@ const costList = {
 const trainers = {
     // 科目二教练
     trainerTwo: {
+        default: null,
         ref: 'CarTrainer',
         type: Schema.Types.ObjectId
     },
     // 科目三教练
     trainerThree: {
+        default: null,
         ref: 'CarTrainer',
         type: Schema.Types.ObjectId
     }

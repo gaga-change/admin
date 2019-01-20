@@ -13,16 +13,15 @@
                             <div class="layui-inline">
                                 <label class="layui-form-label required">姓名</label>
                                 <div class="layui-input-inline">
-                                    <input type="text" name="name" value="{{carStudent.name }}" required
-                                        lay-verify="required" placeholder="" minlength="1" maxlength="10" autocomplete="off"
-                                        class="layui-input">
+                                    <input type="text" name="name" value="{{carStudent.name }}" required lay-verify="required"
+                                        placeholder="" minlength="1" maxlength="10" autocomplete="off" class="layui-input">
                                 </div>
                             </div>
                             <div class="layui-inline">
                                 <label class="layui-form-label required">手机号</label>
                                 <div class="layui-input-inline">
-                                    <input type="text" name="phone" value="{{carStudent.phone }}"
-                                        required lay-verify="phone" placeholder="" autocomplete="off" class="layui-input">
+                                    <input type="text" name="phone" value="{{carStudent.phone }}" required lay-verify="phone"
+                                        placeholder="" autocomplete="off" class="layui-input">
                                 </div>
                             </div>
                         </div>
@@ -43,9 +42,8 @@
                             <div class="layui-inline">
                                 <label class="layui-form-label required">证件号码</label>
                                 <div class="layui-input-inline">
-                                    <input type="text" name="card" value="{{ carStudent.card }}"
-                                        lay-verify="identity" placeholder="" autocomplete="off" class="layui-input"
-                                        required>
+                                    <input type="text" name="card" value="{{ carStudent.card }}" lay-verify="identity"
+                                        placeholder="" autocomplete="off" class="layui-input" required>
                                 </div>
                             </div>
                         </div>
@@ -53,16 +51,14 @@
                             <label class="layui-form-label required">有效期止</label>
                             <div class="layui-input-inline">
                                 <input type="text" name="cardExpiryDate" id="cardExpiryDate" value="{{carStudent.cardExpiryDate && carStudent.cardExpiryDate | date('Y-m-d')}}"
-                                     lay-verify="date" placeholder="" required
-                                    autocomplete="off" class="layui-input">
+                                    lay-verify="date" placeholder="" required autocomplete="off" class="layui-input">
                             </div>
                         </div>
                         <div class="layui-form-item">
                             <label class="layui-form-label required">出生年月</label>
                             <div class="layui-input-inline">
                                 <input type="text" name="birthday" id="birthday" required value="{{carStudent.birthday && carStudent.birthday | date('Y-m-d')}}"
-                                     lay-verify="date" placeholder="" autocomplete="off"
-                                    class="layui-input">
+                                    lay-verify="date" placeholder="" autocomplete="off" class="layui-input">
                             </div>
                         </div>
                         <div class="layui-form-item">
@@ -300,9 +296,13 @@
         renderSelect('regPoint')
 
         form.on('select(classType)', function (data) {
-            var name = data.value
-            var price = cache['classType'][name].price || 0
-            $('#registerPrice').val(price)
+            var name = data.value.trim()
+            if (name) {
+                var price = cache['classType'][name].price || 0
+                $('#registerPrice').val(price)
+            } else {
+                $('#registerPrice').val('')
+            }
         });
         /* 监听提交 */
         form.on('submit(submit)', function (data) {
